@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDevotee } from '../../context/DevoteeContext.tsx';
+import { useLanguage } from '../../context/LanguageContext.tsx';
 import { Modal } from '../common/Modal.tsx';
 
 interface EventsViewProps {
@@ -8,6 +9,7 @@ interface EventsViewProps {
 
 export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
   const { showToast } = useDevotee();
+  const { language, t, loc } = useLanguage();
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [devoteeName, setDevoteeName] = useState('');
   const [devoteePhone, setDevoteePhone] = useState('');
@@ -16,58 +18,164 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
   const events = [
     {
       id: 'event-1',
-      dateDay: '०४',
-      dateMonth: 'जून',
-      title: 'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम पारायण',
-      subtitle: 'Nirjala Ekadashi Collective Vishnu Sahasranama Chanting',
-      time: 'सायंकाळी ०५:३० ते ०८:०० IST',
-      location: 'यज्ञाश्रम मुख्य सभागृह, वेद भवन, पुणे',
-      category: 'सामूहिक जप व पारायण',
-      status: 'Passes Available',
-      desc: '१००१ भक्त एकत्र बसून भगवान विष्णूच्या सहस्र नामांचा सस्वर उच्चार करतील. तुळशीपत्र व तीर्थप्रसाद वाटप.',
+      dateDay: loc('04', '०४', '04', '૦૪'),
+      dateMonth: loc('June', 'जून', 'जून', 'જૂન'),
+      title: loc(
+        'Nirjala Ekadashi Collective Vishnu Sahasranama Chanting',
+        'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम पारायण',
+        'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम पारायण',
+        'નિર્જળા એકાદશી સામૂહિક વિષ્ણુસહસ્રનામ પારાયણ'
+      ),
+      time: loc(
+        '05:30 PM to 08:00 PM IST',
+        'सायंकाळी ०५:३० ते ०८:०० IST',
+        'सायं 05:30 से 08:00 IST',
+        'સાંજે ૦૫:૩૦ થી ૦૮:૦૦ IST'
+      ),
+      location: loc(
+        'Main Yajnashala Auditorium, Veda Bhavan, Pune',
+        'यज्ञाश्रम मुख्य सभागृह, वेद भवन, पुणे',
+        'यज्ञाश्रम मुख्य सभागार, वेद भवन, पुणे',
+        'યજ્ઞાશ્રમ મુખ્ય સભાગૃહ, વેદ ભવન, પુણે'
+      ),
+      category: loc(
+        'Collective Japa & Recitation',
+        'सामूहिक जप व पारायण',
+        'सामूहिक जप एवं पारायण',
+        'સામૂહિક જપ અને પારાયણ'
+      ),
+      status: loc('Passes Available', 'प्रवेशिका उपलब्ध', 'प्रवेशिका उपलब्ध', 'પ્રવેશિકા ઉપલબ્ધ'),
+      desc: loc(
+        '1001 devotees gather for synchronized chanting of Sri Vishnu Sahasranama Stotram with Tulsi leaves and sacred Theertha prasad distribution.',
+        '१००१ भक्त एकत्र बसून भगवान विष्णूच्या सहस्र नामांचा सस्वर उच्चार करतील. तुळशीपत्र व तीर्थप्रसाद वाटप.',
+        '1001 भक्त एकत्र होकर भगवान विष्णु के सहस्त्र नामों का सस्वर पाठ करेंगे। तुलसीदल एवं तीर्थप्रसाद वितरण।',
+        '૧૦૦૧ ભક્તો સાથે મળીને ભગવાન વિષ્ણુના સહસ્ર નામોનો સસ્વર પાઠ કરશે. તુલસીપત્ર અને તીર્થપ્રસાદ વિતરણ.'
+      ),
     },
     {
       id: 'event-2',
-      dateDay: '२१',
-      dateMonth: 'जून',
-      title: 'सूर्य संक्रांति महा रुद्राभिषेक व सौर होम',
-      subtitle: 'Surya Sankranti Maha Rudrabhishek & Saura Havan',
-      time: 'सकाळी ०७:०० ते १०:३० IST',
-      location: 'आश्रम प्रांगण • थेट प्रक्षेपण उपलब्ध (1080p)',
-      category: 'महायज्ञ व होम',
-      status: 'Live Stream & In-person',
-      desc: 'सूर्य ग्रहाच्या संक्रमण दिनी आरोग्य व तेज वृद्धीसाठी विशेष आदित्यहृदय स्तोत्र संपुटित रुद्राभिषेक.',
+      dateDay: loc('21', '२१', '21', '૨૧'),
+      dateMonth: loc('June', 'जून', 'जून', 'જૂન'),
+      title: loc(
+        'Surya Sankranti Maha Rudrabhishek & Saura Homa',
+        'सूर्य संक्रांति महा रुद्राभिषेक व सौर होम',
+        'सूर्य संक्रांति महा रुद्राभिषेक एवं सौर होम',
+        'સૂર્ય સંક્રાંતિ મહા રુદ્રાભિષેક અને સૌર હોમ'
+      ),
+      time: loc(
+        '07:00 AM to 10:30 AM IST',
+        'सकाळी ०७:०० ते १०:३० IST',
+        'प्रातः 07:00 से 10:30 IST',
+        'સવારે ૦૭:૦૦ થી ૧૦:૩૦ IST'
+      ),
+      location: loc(
+        'Ashram Courtyard • Global Live Stream (1080p)',
+        'आश्रम प्रांगण • थेट प्रक्षेपण उपलब्ध (1080p)',
+        'आश्रम प्रांगण • लाइव प्रसारण उपलब्ध (1080p)',
+        'આશ્રમ પરિસર • લાઇવ પ્રસારણ ઉપલબ્ધ (1080p)'
+      ),
+      category: loc(
+        'Maha Yajna & Homa',
+        'महायज्ञ व होम',
+        'महायज्ञ एवं होम',
+        'મહાયજ્ઞ અને હોમ'
+      ),
+      status: loc('Live Stream & In-person', 'प्रत्यक्ष व थेट प्रक्षेपण', 'प्रत्यक्ष एवं ऑनलाइन', 'પ્રત્યક્ષ અને ઑનલાઇન'),
+      desc: loc(
+        'Special Aditya Hridaya Stotra Rudrabhishek on solar ingress for vitality, health, and spiritual radiance.',
+        'सूर्य ग्रहाच्या संक्रमण दिनी आरोग्य व तेज वृद्धीसाठी विशेष आदित्यहृदय स्तोत्र संपुटित रुद्राभिषेक.',
+        'सूर्य संक्रमण दिवस पर स्वास्थ्य एवं तेज वृद्धि हेतु विशेष आदित्यहृदय स्तोत्र सम्पुटित रुद्राभिषेक।',
+        'સૂર્ય સંક્રમણ દિને આરોગ્ય અને તેજ વૃદ્ધિ માટે વિશેષ આદિત્યહૃદય સ્તોત્ર સંપુટિત રુદ્રાભિષેક.'
+      ),
     },
     {
       id: 'event-3',
-      dateDay: '०६',
-      dateMonth: 'जुलै',
-      title: 'आषाढ शुद्ध एकादशी पंढरपूर वारी महाप्रसाद व कीर्तन',
-      subtitle: 'Ashadh Ekadashi Wari Mahaprasad & Kirtan',
-      time: 'दुपारी १२:०० ते ०४:०० IST',
-      location: 'अन्नछत्र सभागृह, पौड रोड संकुल',
-      category: 'अन्नदान व कीर्तन',
-      status: 'Open to All',
-      desc: 'वारकरी भक्तांसाठी मोफत सात्त्विक भोजन व्यवस्था व ज्येष्ठ कीर्तनकारांचे शास्त्रोक्त प्रवचन.',
+      dateDay: loc('06', '०६', '06', '૦૬'),
+      dateMonth: loc('July', 'जुलै', 'जुलाई', 'જુલાઈ'),
+      title: loc(
+        'Ashadh Ekadashi Pandharpur Wari Mahaprasad & Kirtan',
+        'आषाढ शुद्ध एकादशी पंढरपूर वारी महाप्रसाद व कीर्तन',
+        'आषाढ़ शुक्ल एकादशी पंढरपुर वारी महाप्रसाद एवं कीर्तन',
+        'અષાઢ શુદ્ધ એકાદશી પંઢરપુર વારી મહાપ્રસાદ અને કીર્તન'
+      ),
+      time: loc(
+        '12:00 PM to 04:00 PM IST',
+        'दुपारी १२:०० ते ०४:०० IST',
+        'दोपहर 12:00 से 04:00 IST',
+        'બપોરે ૧૨:૦૦ થી ૦૪:૦૦ IST'
+      ),
+      location: loc(
+        'Annakshetra Hall, Paud Road Complex',
+        'अन्नछत्र सभागृह, पौड रोड संकुल',
+        'अन्नक्षेत्र सभागार, पौड रोड संकुल',
+        'અન્નક્ષેત્ર સભાગૃહ, પૌડ રોડ પરિસર'
+      ),
+      category: loc(
+        'Annadanam & Discourses',
+        'अन्नदान व कीर्तन',
+        'अन्नदान एवं कीर्तन',
+        'અન્નદાન અને કીર્તન'
+      ),
+      status: loc('Open to All', 'सर्वांसाठी खुले', 'सभी के लिए खुला', 'બધા માટે ખુલ્લું'),
+      desc: loc(
+        'Free satvik feast for visiting pilgrims and devotional discourses by senior scholarly Haridases.',
+        'वारकरी भक्तांसाठी मोफत सात्त्विक भोजन व्यवस्था व ज्येष्ठ कीर्तनकारांचे शास्त्रोक्त प्रवचन.',
+        'श्रद्धालु भक्तों हेतु निःशुल्क सात्त्विक भोजन व्यवस्था एवं वरिष्ठ विद्वानों का प्रवचन।',
+        'યાત્રાળુ ભક્તો માટે વિનામૂલ્યે સાત્ત્વિક ભોજન વ્યવસ્થા અને વરિષ્ઠ વિદ્વાનોનું શાસ્ત્રોક્ત પ્રવચન.'
+      ),
     },
     {
       id: 'event-4',
-      dateDay: '०४',
-      dateMonth: 'ऑगस्ट',
-      title: 'श्रावण सोमवार महारुद्र अभिषेक अनुष्ठान',
-      subtitle: 'Shravan Somvar Maharudra Abhishek Series',
-      time: 'सकाळी ०६:०० ते दुपारी ०१:०० IST',
-      location: 'वेदमंदिर शिव गर्भगृह',
-      category: 'श्रावण विशेष',
-      status: 'Sankalpa Booking Open',
-      desc: 'श्रावणातील पहिल्या सोमवारी ११००० बिल्वपत्र व पंचामृत अभिषेकासह महारुद्र महायज्ञ संपन्न होईल.',
+      dateDay: loc('04', '०४', '04', '૦૪'),
+      dateMonth: loc('August', 'ऑगस्ट', 'अगस्त', 'ઓગસ્ટ'),
+      title: loc(
+        'Shravan Somvar Maharudra Abhishek Series',
+        'श्रावण सोमवार महारुद्र अभिषेक अनुष्ठान',
+        'श्रावण सोमवार महारुद्र अभिषेक अनुष्ठान',
+        'શ્રાવણ સોમવાર મહારુદ્ર અભિષેક અનુષ્ઠાન'
+      ),
+      time: loc(
+        '06:00 AM to 01:00 PM IST',
+        'सकाळी ०६:०० ते दुपारी ०१:०० IST',
+        'प्रातः 06:00 से दोपहर 01:00 IST',
+        'સવારે ૦૬:૦૦ થી બપોરે ૦૧:૦૦ IST'
+      ),
+      location: loc(
+        'Veda Mandir Shiva Sanctum',
+        'वेदमंदिर शिव गर्भगृह',
+        'वेदमंदिर शिव गर्भगृह',
+        'વેદમંદિર શિવ ગર્ભગૃહ'
+      ),
+      category: loc(
+        'Shravan Special',
+        'श्रावण विशेष',
+        'श्रावण विशेष',
+        'શ્રાવણ વિશેષ'
+      ),
+      status: loc(
+        'Sankalpa Booking Open',
+        'संकल्प नोंदणी सुरू',
+        'संकल्प पंजीकरण खुला',
+        'સંકલ્પ નોંધણી શરૂ'
+      ),
+      desc: loc(
+        'First Shravan Somvar with 11,000 Bilva leaves and Panchamrit offerings in an austere Vedic setting.',
+        'श्रावणातील पहिल्या सोमवारी ११००० बिल्वपत्र व पंचामृत अभिषेकासह महारुद्र महायज्ञ संपन्न होईल.',
+        'श्रावण के प्रथम सोमवार को 11000 बिल्वपत्र एवं पंचामृत अभिषेक सहित महारुद्र महायज्ञ संपन्न होगा।',
+        'શ્રાવણના પ્રથમ સોમવારે ૧૧૦૦૦ બિલીપત્ર અને પંચામૃત અભિષેક સાથે મહારુદ્ર મહાયજ્ઞ સંપન્ન થશે.'
+      ),
     },
   ];
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     showToast(
-      `आपला ई-पास (${selectedEvent}) साठी यशस्वीरित्या आरक्षित झाला आहे! SMS पाठवला आहे.`,
+      loc(
+        `Your E-Pass for (${selectedEvent}) has been successfully reserved! SMS confirmation sent.`,
+        `आपला ई-पास (${selectedEvent}) साठी यशस्वीरित्या आरक्षित झाला आहे! SMS पाठवला आहे.`,
+        `आपका ई-पास (${selectedEvent}) हेतु सफलतापूर्वक आरक्षित हो गया है! SMS प्रेषित किया गया है।`,
+        `તમારો ઈ-પાસ (${selectedEvent}) માટે સફળતાપૂર્વક આરક્ષિત થયો છે! SMS મોકલાયો છે.`
+      ),
       'success'
     );
     setSelectedEvent(null);
@@ -84,26 +192,45 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
             className="hover:text-[#570013] transition-colors flex items-center gap-1 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[15px] text-[#765B00]">home</span>
-            <span>Home</span>
+            <span>{t('nav.home')}</span>
           </button>
           <span className="text-[#E0BFBF]">/</span>
-          <span className="text-[#570013] font-semibold">Events & Satsang (आश्रम उपक्रम व दिनदर्शिका)</span>
+          <span className="text-[#570013] font-semibold">
+            {loc(
+              'Events & Satsang Calendar',
+              'आश्रम उपक्रम व दिनदर्शिका',
+              'आश्रम कार्यक्रम एवं पंचांग',
+              'આશ્રમ કાર્યક્રમો અને પંચાંગ'
+            )}
+          </span>
         </div>
       </div>
 
       <div className="max-w-[1240px] mx-auto px-4 lg:px-12 py-12 space-y-10">
         <div className="max-w-3xl space-y-2">
           <span className="text-xs text-[#765B00] font-bold uppercase tracking-wider">
-            Satsang & Spiritual Calendar 2025
+            {loc(
+              'Satsang & Spiritual Calendar 2025',
+              'सत्संग व आध्यात्मिक दिनदर्शिका २०२५',
+              'सत्संग एवं आध्यात्मिक कैलेंडर 2025',
+              'સત્સંગ અને આધ્યાત્મિક કેલેન્ડર ૨૦૨૫'
+            )}
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl text-[#570013] font-bold tracking-tight">
-            Upcoming Ashram Events & Religious Gatherings
-            <span className="block font-serif text-xl sm:text-2xl text-[#765B00] font-medium mt-1">
-              आगामी धार्मिक उपक्रम व व्याख्यानमाला
-            </span>
+            {loc(
+              'Upcoming Ashram Events & Religious Gatherings',
+              'आगामी धार्मिक उपक्रम व व्याख्यानमाला',
+              'आगामी धार्मिक कार्यक्रम एवं व्याख्यानमाला',
+              'આગામી ધાર્મિક કાર્યક્રમો અને વ્યાખ્યાનમાળા'
+            )}
           </h1>
           <p className="text-sm text-[#584141]">
-            Participate in communal Vedic chanting, sacred ekadashi observances, and philosophical discourses at our Pune campus or through global live broadcasts.
+            {loc(
+              'Participate in communal Vedic chanting, sacred Ekadashi observances, and philosophical discourses at our Pune campus or through global live broadcasts.',
+              'सामूहिक वेदमंत्रोच्चार, पवित्र एकादशी अनुष्ठान आणि तात्त्विक व्याख्यानांमध्ये प्रत्यक्ष अथवा थेट प्रक्षेपणाद्वारे सहभागी व्हा.',
+              'सामूहिक वेदमंत्रोच्चार, पवित्र एकादशी अनुष्ठान एवं दार्शनिक प्रवचनों में प्रत्यक्ष अथवा ऑनलाइन सम्मिलित हों।',
+              'સામૂહિક વેદમંત્રોચ્ચાર, પવિત્ર એકાદશી અનુષ્ઠાન અને તાત્ત્વિક પ્રવચનોમાં પ્રત્યક્ષ અથવા ઑનલાઇન સહભાગી બનો.'
+            )}
           </p>
         </div>
 
@@ -156,7 +283,7 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
                   className="px-4 py-2 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors shadow-xs flex items-center gap-1 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[15px]">confirmation_number</span>
-                  <span>ई-पास आरक्षित करा (Reserve Pass)</span>
+                  <span>{loc('Reserve E-Pass', 'ई-पास आरक्षित करा', 'ई-पास आरक्षित करें', 'ઈ-પાસ આરક્ષિત કરો')}</span>
                 </button>
               </div>
             </div>
@@ -168,28 +295,28 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
       <Modal
         isOpen={Boolean(selectedEvent)}
         onClose={() => setSelectedEvent(null)}
-        title="Event Pass Registration"
+        title={loc('Event Pass Registration', 'कार्यक्रम प्रवेशिका नोंदणी', 'कार्यक्रम प्रवेशिका पंजीकरण', 'કાર્યક્રમ પ્રવેશિકા નોંધણી')}
         subtitle={selectedEvent || ''}
         maxWidth="md"
       >
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="block text-xs uppercase tracking-wider text-[#221918] font-bold mb-1">
-              Devotee Full Name *
+              {loc('Devotee Full Name *', 'भक्ताचे संपूर्ण नाव *', 'भक्त का पूरा नाम *', 'ભક્તનું પૂરું નામ *')}
             </label>
             <input
               type="text"
               required
               value={devoteeName}
               onChange={(e) => setDevoteeName(e.target.value)}
-              placeholder="उदा. श्री राहुल कुलकर्णी"
+              placeholder={loc('e.g. Rahul Kulkarni', 'उदा. श्री राहुल कुलकर्णी', 'उदा. श्री राहुल कुलकर्णी', 'દા.ત. શ્રી રાહુલ કુલકર્ણી')}
               className="w-full px-3 py-2 rounded-lg bg-[#FFF8F6] text-[#221918] text-sm border border-[#E0BFBF]/50 focus:outline-none"
             />
           </div>
 
           <div>
             <label className="block text-xs uppercase tracking-wider text-[#221918] font-bold mb-1">
-              WhatsApp Mobile Number *
+              {loc('WhatsApp Mobile Number *', 'व्हॉट्सॲप मोबाइल क्रमांक *', 'व्हाट्सएप मोबाइल नंबर *', 'વ્હોટ્સએપ મોબાઈલ નંબર *')}
             </label>
             <input
               type="tel"
@@ -203,17 +330,17 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
 
           <div>
             <label className="block text-xs uppercase tracking-wider text-[#221918] font-bold mb-1">
-              Number of Attendees (उपस्थित व्यक्ती संख्या)
+              {loc('Number of Attendees', 'उपस्थित व्यक्ती संख्या', 'उपस्थित व्यक्तियों की संख्या', 'ઉપસ્થિત વ્યક્તિઓની સંખ્યા')}
             </label>
             <select
               value={attendeeCount}
               onChange={(e) => setAttendeeCount(Number(e.target.value))}
               className="w-full px-3 py-2 rounded-lg bg-[#FFF8F6] text-[#221918] text-sm border border-[#E0BFBF]/50 focus:outline-none"
             >
-              <option value={1}>1 व्यक्ती (Individual)</option>
-              <option value={2}>2 व्यक्ती (Couple)</option>
-              <option value={4}>4 व्यक्ती (Family Pass)</option>
-              <option value={6}>6 व्यक्ती (Group)</option>
+              <option value={1}>{loc('1 Person (Individual)', '१ व्यक्ती (वैयक्तिक)', '1 व्यक्ति (व्यक्तिगत)', '૧ વ્યક્તિ (વ્યક્તિગત)')}</option>
+              <option value={2}>{loc('2 Persons (Couple)', '२ व्यक्ती (दाम्पत्य)', '2 व्यक्ति (दम्पति)', '૨ વ્યક્તિ (દંપતી)')}</option>
+              <option value={4}>{loc('4 Persons (Family Pass)', '४ व्यक्ती (कौटुंबिक)', '4 व्यक्ति (पारिवारिक)', '૪ વ્યક્તિ (કૌટુંબિક)')}</option>
+              <option value={6}>{loc('6 Persons (Group)', '६ व्यक्ती (गट)', '6 व्यक्ति (समूह)', '૬ વ્યક્તિ (સમૂહ)')}</option>
             </select>
           </div>
 
@@ -223,13 +350,13 @@ export const EventsView: React.FC<EventsViewProps> = ({ onNavigate }) => {
               onClick={() => setSelectedEvent(null)}
               className="px-4 py-2 rounded-lg bg-[#FFF0ED] text-[#221918] text-xs font-semibold hover:bg-[#FCEAE6]"
             >
-              रद्द करा
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className="px-5 py-2.5 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors shadow-xs"
             >
-              ई-पास निश्चित करा (Confirm Pass)
+              {loc('Confirm Pass', 'ई-पास निश्चित करा', 'ई-पास निश्चित करें', 'ઈ-પાસ નિશ્ચિત કરો')}
             </button>
           </div>
         </form>

@@ -7,6 +7,8 @@ export interface PoojaService {
   id: string;
   nameEn: string;
   nameMr: string;
+  nameHi?: string;
+  nameGu?: string;
   category: 'shanti' | 'mahayajna' | 'samskara' | 'abhishek' | 'pitru';
   categoryLabelEn: string;
   categoryLabelMr: string;
@@ -14,6 +16,8 @@ export interface PoojaService {
   categoryLabelGu: string;
   descriptionEn: string;
   descriptionMr: string;
+  descriptionHi?: string;
+  descriptionGu?: string;
   longDescriptionEn: string;
   longDescriptionMr: string;
   duration: string;
@@ -33,11 +37,17 @@ export interface GurukulCourse {
   titleEn: string;
   titleMr: string;
   titleHi: string;
+  titleGu?: string;
   category: 'residential' | 'weekend' | 'paurohitya' | 'online';
   categoryLabel: string;
+  categoryLabelGu?: string;
+  categoryLabelHi?: string;
+  categoryLabelMr?: string;
   duration: string;
   descriptionEn: string;
   descriptionMr: string;
+  descriptionHi?: string;
+  descriptionGu?: string;
   eligibility: string;
   seva: string;
   status: string;
@@ -72,6 +82,8 @@ export interface TaxReceipt {
   dateIso: string;
   purpose: string;
   purposeMr: string;
+  purposeHi?: string;
+  purposeGu?: string;
   mode: string;
   amount: number;
   status: string;

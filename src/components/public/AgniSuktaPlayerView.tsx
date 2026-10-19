@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDevotee } from '../../context/DevoteeContext.tsx';
+import { useLanguage } from '../../context/LanguageContext.tsx';
+import { formatLocalizedNumber } from '../../utils/formatters.ts';
 
 interface AgniSuktaPlayerViewProps {
   onNavigate: (path: string) => void;
@@ -7,6 +9,7 @@ interface AgniSuktaPlayerViewProps {
 
 export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavigate }) => {
   const { audioState, setAudioState, togglePlayAudio, showToast } = useDevotee();
+  const { language, t, loc } = useLanguage();
   const [showIast, setShowIast] = useState(true);
   const [showAnvaya, setShowAnvaya] = useState(true);
   const [selectedVerse, setSelectedVerse] = useState<number>(1);
@@ -37,11 +40,19 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
   const handleModeChange = (mode: 'samhita' | 'pada' | 'krama') => {
     setAudioState((prev) => ({ ...prev, pathaMode: mode }));
     const labels = {
-      samhita: 'संहिता पाठ',
-      pada: 'पद पाठ',
-      krama: 'क्रम पाठ',
+      samhita: loc('Samhita Patha', 'संहिता पाठ', 'संहिता पाठ', 'સંહિતા પાઠ'),
+      pada: loc('Pada Patha', 'पद पाठ', 'पद पाठ', 'પદ પાઠ'),
+      krama: loc('Krama Patha', 'क्रम पाठ', 'क्रम पाठ', 'ક્રમ પાઠ'),
     };
-    showToast(`${labels[mode]} मोड सुरू केला (Switched to ${mode} mode)`, 'info');
+    showToast(
+      loc(
+        `Switched to ${labels[mode]} mode`,
+        `${labels[mode]} सुरू केला`,
+        `${labels[mode]} प्रारंभ किया`,
+        `${labels[mode]} શરૂ કર્યો`
+      ),
+      'info'
+    );
   };
 
   const handleSpeedChange = (speed: number) => {
@@ -56,7 +67,15 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
       currentTimeSeconds: verseSeconds[verseNum] || 0,
       isPlaying: true,
     }));
-    showToast(`ऋचा ${verseNum} चा स्वाध्याय सुरू केला`, 'info');
+    showToast(
+      loc(
+        `Started recitation for Hymn ${verseNum}`,
+        `ऋचा ${verseNum} चा स्वाध्याय सुरू केला`,
+        `ऋचा ${verseNum} का अध्ययन प्रारंभ हुआ`,
+        `ઋચા ${verseNum} નો અધ્યયન શરૂ કર્યો`
+      ),
+      'info'
+    );
   };
 
   return (
@@ -69,19 +88,21 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
               onClick={() => onNavigate('home')}
               className="hover:text-[#570013] transition-colors cursor-pointer"
             >
-              Home
+              {t('nav.home')}
             </button>
             <span className="text-[#E0BFBF]">›</span>
             <button
               onClick={() => onNavigate('gurukul')}
               className="hover:text-[#570013] transition-colors cursor-pointer"
             >
-              Gurukul
+              {t('nav.learning')}
             </button>
             <span className="text-[#E0BFBF]">›</span>
-            <span>Rigveda Shakala Samhita</span>
+            <span>{loc('Rigveda Shakala Samhita', 'ऋग्वेद शाकल संहिता', 'ऋग्वेद शाकल संहिता', 'ઋગ્વેદ શાકલ સંહિતા')}</span>
             <span className="text-[#E0BFBF]">›</span>
-            <span className="text-[#765B00] font-bold">Mandala 1 • Agni Sukta (ऋग्वेद १.१)</span>
+            <span className="text-[#765B00] font-bold">
+              {loc('Mandala 1 • Agni Sukta (1.1)', 'प्रथम मण्डल • अग्नि सूक्त (१.१)', 'प्रथम मण्डल • अग्नि सूक्त (1.1)', 'પ્રથમ મંડલ • અગ્નિ સૂક્ત (૧.૧)')}
+            </span>
           </div>
 
           <button
@@ -89,7 +110,7 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
             className="inline-flex items-center gap-1 text-[#570013] hover:text-[#800020] font-semibold transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            <span>Curriculum Overview (अभ्यासक्रम सारांश)</span>
+            <span>{loc('Curriculum Overview', 'अभ्यासक्रम सारांश', 'पाठ्यक्रम सारांश', 'અભ્યાસક્રમ સારાંશ')}</span>
           </button>
         </div>
       </section>
@@ -101,12 +122,22 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
             <div className="space-y-1">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#FFD979]/40 text-[#795D00] text-xs font-semibold">
                 <span className="material-symbols-outlined text-[14px] text-[#765B00]">verified</span>
-                <span>सत्यापित अध्ययनार्थी • Active Learner Console</span>
+                <span>{loc('Active Learner Console', 'सत्यापित अध्ययनार्थी कक्ष', 'सत्यापित शिक्षार्थी कक्ष', 'ચકાસાયેલ વિદ્યાર્થી કક્ષ')}</span>
               </div>
               <h1 className="font-serif text-2xl sm:text-3xl text-[#570013] font-bold tracking-tight">
-                अग्नि सूक्त — प्रथम मण्डल
+                {loc(
+                  'Agni Sukta — Mandala 1',
+                  'अग्नि सूक्त — प्रथम मण्डल',
+                  'अग्नि सूक्त — प्रथम मण्डल',
+                  'અગ્નિ સૂક્ત — પ્રથમ મંડલ'
+                )}
                 <span className="block text-sm sm:text-base text-[#584141] font-sans font-normal mt-0.5">
-                  Rigveda Samhita 1.1: Complete Adhyayan, Swara Sadhana & Bhashya
+                  {loc(
+                    'Rigveda Samhita 1.1: Complete Adhyayan, Swara Sadhana & Bhashya',
+                    'ऋग्वेद संहिता १.१: संपूर्ण अध्ययन, स्वर साधना व भाष्य',
+                    'ऋग्वेद संहिता 1.1: संपूर्ण अध्ययन, स्वर साधना एवं भाष्य',
+                    'ઋગ્વેદ સંહિતા ૧.૧: સંપૂર્ણ અધ્યયન, સ્વર સાધના અને ભાષ્ય'
+                  )}
                 </span>
               </h1>
             </div>
@@ -115,27 +146,35 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <div className="bg-[#FFF0ED] px-3 py-1.5 rounded-lg border border-[#E0BFBF]/30 text-center">
                 <span className="block text-[10px] text-[#765B00] font-bold uppercase tracking-wider">
-                  Rishi (ऋषि)
+                  {loc('Rishi', 'ऋषि', 'ऋषि', 'ઋષિ')}
                 </span>
-                <span className="font-semibold text-[#221918]">Madhuchhandas</span>
+                <span className="font-semibold text-[#221918]">
+                  {loc('Madhuchhandas', 'मधुच्छन्दाः', 'मधुच्छन्दाः', 'મધુચ્છન્દાસ')}
+                </span>
               </div>
               <div className="bg-[#FFF0ED] px-3 py-1.5 rounded-lg border border-[#E0BFBF]/30 text-center">
                 <span className="block text-[10px] text-[#765B00] font-bold uppercase tracking-wider">
-                  Chhanda (छन्द)
+                  {loc('Chhanda', 'छन्द', 'छन्द', 'છંદ')}
                 </span>
-                <span className="font-semibold text-[#221918]">Gayatri (२४ अक्षरे)</span>
+                <span className="font-semibold text-[#221918]">
+                  {loc('Gayatri (24 syllables)', 'गायत्री (२४ अक्षरे)', 'गायत्री (24 वर्ण)', 'ગાયત્રી (૨૪ અક્ષર)')}
+                </span>
               </div>
               <div className="bg-[#FFF0ED] px-3 py-1.5 rounded-lg border border-[#E0BFBF]/30 text-center">
                 <span className="block text-[10px] text-[#765B00] font-bold uppercase tracking-wider">
-                  Devata (देवता)
+                  {loc('Devata', 'देवता', 'देवता', 'દેવતા')}
                 </span>
-                <span className="font-semibold text-[#221918]">Agni (अग्नि)</span>
+                <span className="font-semibold text-[#221918]">
+                  {loc('Agni', 'अग्निदेव', 'अग्निदेव', 'અગ્નિદેવ')}
+                </span>
               </div>
               <div className="bg-[#FFF0ED] px-3 py-1.5 rounded-lg border border-[#E0BFBF]/30 text-center">
                 <span className="block text-[10px] text-[#765B00] font-bold uppercase tracking-wider">
-                  Reciter
+                  {loc('Reciter', 'आचार्य', 'आचार्य', 'આચાર્ય')}
                 </span>
-                <span className="font-semibold text-[#570013]">Acharya Shridhar Ghanapathi</span>
+                <span className="font-semibold text-[#570013]">
+                  {loc('Dr. Shripad Bhat (Ghanapathi)', 'वे. मू. डॉ. श्रीपाद भट', 'वे. मू. डॉ. श्रीपाद भट', 'વે. મૂ. ડૉ. શ્રીપાદ ભટ્ટ')}
+                </span>
               </div>
             </div>
           </div>
@@ -250,7 +289,11 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                           : 'text-[#221918] hover:bg-white'
                       }`}
                     >
-                      {spd === 0.75 ? '0.75x (मंद)' : spd === 1.0 ? '1.0x (मध्यम)' : '1.25x (द्रुत)'}
+                      {spd === 0.75
+                        ? loc('0.75x (Slow)', '०.७५x (मंद)', '0.75x (मंद)', '૦.૭૫x (મંદ)')
+                        : spd === 1.0
+                        ? loc('1.0x (Normal)', '१.०x (मध्यम)', '1.0x (मध्यम)', '૧.૦x (સામાન્ય)')
+                        : loc('1.25x (Fast)', '१.२५x (द्रुत)', '1.25x (द्रुत)', '૧.૨૫x (ઝડપી)')}
                     </button>
                   ))}
                 </div>
@@ -381,15 +424,25 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                     </span>
                     <span className="flex items-center gap-1 text-xs text-[#765B00] font-semibold">
                       <span className="w-2 h-2 rounded-full bg-[#765B00] animate-pulse"></span>
-                      Currently Chanting
+                      {loc('Currently Chanting', 'सध्या पठण सुरू', 'वर्तमान पाठ जारी', 'હાલમાં પઠન ચાલુ')}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => showToast('ऋचा १ बुकमार्क केली (Bookmarked)', 'success')}
+                      onClick={() =>
+                        showToast(
+                          loc(
+                            'Richa 1 Bookmarked',
+                            'ऋचा १ बुकमार्क केली',
+                            'ऋचा 1 बुकमार्क की गई',
+                            'ઋચા ૧ બુકમાર્ક કરી'
+                          ),
+                          'success'
+                        )
+                      }
                       className="p-1.5 rounded bg-[#FFF0ED] hover:bg-[#FCEAE6] text-[#584141] transition-colors cursor-pointer"
-                      title="Bookmark verse"
+                      title={loc('Bookmark verse', 'ऋचा बुकमार्क करा', 'ऋचा बुकमार्क करें', 'ઋચા બુકમાર્ક કરો')}
                     >
                       <span className="material-symbols-outlined text-[18px]">bookmark_add</span>
                     </button>
@@ -398,10 +451,18 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                         navigator.clipboard.writeText(
                           '॥ ॐ अ॒ग्निमी॑ळे पु॒रोहि॑तं य॒ज्ञस्य॑ दे॒वमृ॒त्विज॑म् । होता॑रं रत्न॒धात॑मम् ॥ १ ॥'
                         );
-                        showToast('वेदमंत्र क्लिपबोर्डवर कॉपी झाला', 'info');
+                        showToast(
+                          loc(
+                            'Vedic mantra copied to clipboard',
+                            'वेदमंत्र क्लिपबोर्डवर कॉपी झाला',
+                            'वेदमंत्र क्लिपबोर्ड पर कॉपी हुआ',
+                            'વેદમંત્ર ક્લિપબોર્ડ પર કૉપી થયો'
+                          ),
+                          'info'
+                        );
                       }}
                       className="p-1.5 rounded bg-[#FFF0ED] hover:bg-[#FCEAE6] text-[#584141] transition-colors cursor-pointer"
-                      title="Copy Sanskrit"
+                      title={loc('Copy Sanskrit', 'संस्कृत मंत्र कॉपी करा', 'संस्कृत मंत्र कॉपी करें', 'સંસ્કૃત મંત્ર કૉપી કરો')}
                     >
                       <span className="material-symbols-outlined text-[18px]">content_copy</span>
                     </button>
@@ -606,26 +667,63 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
             <div className="bg-[#FFF0ED] rounded-xl p-5 border border-[#E0BFBF]/40 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h4 className="font-serif text-sm font-bold text-[#570013]">
-                  प्रामाणिक वैदिक अभ्यास साहित्य (Archival References)
+                  {loc(
+                    'Authentic Vedic Study Materials',
+                    'प्रामाणिक वैदिक अभ्यास साहित्य',
+                    'प्रमाणिक वैदिक अध्ययन सामग्री',
+                    'પ્રમાણિત વૈદિક અભ્યાસ સામગ્રી'
+                  )}
                 </h4>
                 <p className="text-xs text-[#584141]">
-                  Download authentic manuscript transcriptions & audio masters for offline tapasya.
+                  {loc(
+                    'Download authentic manuscript transcriptions & audio masters for offline study.',
+                    'ऑफलाईन साधनेसाठी अस्सल हस्तलिखित प्रती व ऑडिओ डाउनलोड करा.',
+                    'ऑफ़लाइन अध्ययन हेतु प्रामाणिक पांडुलिपि प्रतिलिपियां एवं ऑडियो डाउनलोड करें।',
+                    'ઓફલાઇન અભ્યાસ માટે હસ્તપ્રત લિપિ અને ઉચ્ચ ગુણવત્તાવાળા ઑડિયો ડાઉનલોડ કરો.'
+                  )}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => showToast('Agni Sukta Bhashya PDF डाउनलोड सुरू झाले', 'info')}
+                  onClick={() =>
+                    showToast(
+                      loc(
+                        'Downloading Agni Sukta Bhashya PDF...',
+                        'अग्नि सूक्त भाष्य पीडीएफ डाउनलोड सुरू झाले...',
+                        'अग्नि सूक्त भाष्य पीडीएफ डाउनलोड प्रारंभ हुआ...',
+                        'અગ્નિ સૂક્ત ભાષ્ય પીડીએફ ડાઉનલોડ શરૂ થયું...'
+                      ),
+                      'info'
+                    )
+                  }
                   className="px-3 py-2 rounded-lg bg-white text-[#570013] hover:bg-[#FCEAE6] text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[18px] text-[#765B00]">picture_as_pdf</span>
-                  <span>Agni Sukta Bhashya (PDF)</span>
+                  <span>{loc('Agni Sukta Bhashya (PDF)', 'अग्नि सूक्त भाष्य (PDF)', 'अग्नि सूक्त भाष्य (PDF)', 'અગ્નિ સૂક્ત ભાષ્ય (PDF)')}</span>
                 </button>
                 <button
-                  onClick={() => showToast('24-Bit FLAC Audio Master डाउनलोड सुरू झाले', 'info')}
+                  onClick={() =>
+                    showToast(
+                      loc(
+                        'Downloading 24-Bit Studio FLAC Audio...',
+                        '२४-बिट स्टुडिओ ऑडिओ मास्टर डाउनलोड सुरू झाले...',
+                        '24-बिट स्टूडियो ऑडियो मास्टर डाउनलोड प्रारंभ हुआ...',
+                        '૨૪-બિટ સ્ટુડિયો ઑડિયો માસ્ટર ડાઉનલોડ શરૂ થયું...'
+                      ),
+                      'info'
+                    )
+                  }
                   className="px-3 py-2 rounded-lg bg-[#570013] text-white hover:bg-[#800020] text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[18px]">download_for_offline</span>
-                  <span>Studio FLAC (28 MB)</span>
+                  <span>
+                    {loc(
+                      'Studio FLAC (28 MB)',
+                      'स्टुडिओ FLAC (२८ MB)',
+                      'स्टूडियो FLAC (28 MB)',
+                      'સ્ટુડિયો FLAC (૨૮ MB)'
+                    )}
+                  </span>
                 </button>
               </div>
             </div>
@@ -638,16 +736,18 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
               <div className="space-y-2 pb-2 border-b border-[#E0BFBF]/30">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-[#765B00] font-bold uppercase tracking-wider">
-                    पाठ्यक्रम प्रगती • Course Track
+                    {loc('Course Track & Syllabus Progress', 'पाठ्यक्रम प्रगती', 'पाठ्यक्रम प्रगति', 'અભ્યાસક્રમ પ્રગતિ')}
                   </span>
-                  <span className="text-xs text-[#570013] font-bold">4 / 12 Lessons</span>
+                  <span className="text-xs text-[#570013] font-bold">
+                    {formatLocalizedNumber('4', language)} / {formatLocalizedNumber('12', language)} {loc('Lessons', 'पाठ', 'पाठ', 'પાઠ')}
+                  </span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-[#FFF0ED] overflow-hidden">
                   <div className="h-full bg-[#765B00] rounded-full" style={{ width: '33.3%' }}></div>
                 </div>
                 <div className="flex justify-between text-[11px] text-[#584141]">
-                  <span>33% Completed</span>
-                  <span>ऋग्वेद प्रारंभिक स्तर</span>
+                  <span>{formatLocalizedNumber('33', language)}% {loc('Completed', 'पूर्ण', 'पूर्ण', 'પૂર્ણ')}</span>
+                  <span>{loc('Rigveda Beginner Level', 'ऋग्वेद प्रारंभिक स्तर', 'ऋग्वेद प्रारंभिक स्तर', 'ઋગ્વેદ પ્રારંભિક સ્તર')}</span>
                 </div>
               </div>
 
@@ -655,7 +755,7 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
               <div className="space-y-2 text-xs">
                 {/* Module 1 */}
                 <div className="p-2.5 rounded-lg bg-[#FFF0ED] flex items-center justify-between text-[#570013] font-semibold">
-                  <span>विभाग १: वैदिक स्वर परिचय व नियम</span>
+                  <span>{loc('Module 1: Vedic Svara Intro & Rules', 'विभाग १: वैदिक स्वर परिचय व नियम', 'विभाग 1: वैदिक स्वर परिचय एवं नियम', 'વિભાગ ૧: વૈદિક સ્વર પરિચય અને નિયમો')}</span>
                   <span className="material-symbols-outlined text-[16px] text-[#765B00]">check_circle</span>
                 </div>
 
@@ -664,42 +764,42 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                   <div className="flex items-center justify-between text-[#570013] font-bold">
                     <span className="flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-[16px] text-[#765B00]">play_circle</span>
-                      <span>विभाग २: अग्नि सूक्त संपूर्ण अध्ययन</span>
+                      <span>{loc('Module 2: Agni Sukta Complete Study', 'विभाग २: अग्नि सूक्त संपूर्ण अध्ययन', 'विभाग 2: अग्नि सूक्त संपूर्ण अध्ययन', 'વિભાગ ૨: અગ્નિ સૂક્ત સંપૂર્ણ અધ્યયન')}</span>
                     </span>
-                    <span className="text-[#765B00] text-[10px] font-bold">चालू</span>
+                    <span className="text-[#765B00] text-[10px] font-bold">{loc('In Progress', 'चालू', 'प्रगति पर', 'ચાલુ')}</span>
                   </div>
                   <div className="space-y-1.5 pl-3">
                     <div className="flex items-center justify-between text-[#584141] py-1">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-[14px] text-[#765B00]">check</span>
-                        <span>२.१ मधुच्छन्दा ऋषि व विनियोग</span>
+                        <span>{loc('2.1 Madhucchanda Rishi & Viniyoga', '२.१ मधुच्छन्दा ऋषि व विनियोग', '2.1 मधुच्छन्दा ऋषि एवं विनियोग', '૨.૧ મધુચ્છંદા ઋષિ અને વિનિયોગ')}</span>
                       </span>
-                      <span className="text-[10px] text-[#765B00]">पूर्ण</span>
+                      <span className="text-[10px] text-[#765B00]">{loc('Completed', 'पूर्ण', 'पूर्ण', 'પૂર્ણ')}</span>
                     </div>
                     <div className="flex items-center justify-between text-[#570013] font-bold bg-white rounded px-2 py-1.5 shadow-xs">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-[16px] text-[#570013]">
                           record_voice_over
                         </span>
-                        <span>२.२ ऋचा १: पदपाठ व स्वरभेद</span>
+                        <span>{loc('2.2 Richa 1: Pada Patha & Svara Distinction', '२.२ ऋचा १: पदपाठ व स्वरभेद', '2.2 ऋचा 1: पदपाठ एवं स्वरभेद', '૨.૨ ઋચા ૧: પદપાઠ અને સ્વરભેદ')}</span>
                       </span>
                       <span className="text-[10px] bg-[#570013] text-white px-1.5 py-0.5 rounded">
-                        वाजत आहे
+                        {loc('Playing', 'वाजत आहे', 'बज रहा है', 'વાગી રહ્યું છે')}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[#584141] py-1">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-[14px]">lock_open</span>
-                        <span>२.३ ऋचा २ व ३: सन्धी व यति नियम</span>
+                        <span>{loc('2.3 Richas 2 & 3: Sandhi & Yati Rules', '२.३ ऋचा २ व ३: सन्धी व यति नियम', '2.3 ऋचा 2 व 3: संधि एवं यति नियम', '૨.૩ ઋચા ૨ અને ૩: સંધિ અને યતિ નિયમો')}</span>
                       </span>
-                      <span className="text-[10px]">१० मि.</span>
+                      <span className="text-[10px]">{formatLocalizedNumber('10', language)} {loc('min', 'मि.', 'मि.', 'મિનિટ')}</span>
                     </div>
                     <div className="flex items-center justify-between text-[#584141] py-1">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-[14px]">lock_open</span>
-                        <span>२.४ ऋचा ४ ते ९: पूर्णाहुती व घनपाठ</span>
+                        <span>{loc('2.4 Richas 4 to 9: Purnahuti & Ghana Patha', '२.४ ऋचा ४ ते ९: पूर्णाहुती व घनपाठ', '2.4 ऋचा 4 से 9: पूर्णाहुति एवं घनपाठ', '૨.૪ ઋચા ૪ થી ૯: પૂર્ણાહુતિ અને ઘનપાઠ')}</span>
                       </span>
-                      <span className="text-[10px]">२२ मि.</span>
+                      <span className="text-[10px]">{formatLocalizedNumber('22', language)} {loc('min', 'मि.', 'मि.', 'મિનિટ')}</span>
                     </div>
                   </div>
                 </div>
@@ -708,9 +808,9 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                 <div className="p-2.5 rounded-lg bg-[#FFF0ED] opacity-60 flex items-center justify-between text-[#584141]">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[16px]">lock</span>
-                    <span>विभाग ३: पुरुष सूक्त विधी व न्यास</span>
+                    <span>{loc('Module 3: Purusha Sukta Vidhi & Nyasa', 'विभाग ३: पुरुष सूक्त विधी व न्यास', 'विभाग 3: पुरुष सूक्त विधि एवं न्यास', 'વિભાગ ૩: પુરુષ સૂક્ત વિધિ અને ન્યાસ')}</span>
                   </div>
-                  <span className="text-[10px]">पुढील स्तर</span>
+                  <span className="text-[10px]">{loc('Next Level', 'पुढील स्तर', 'अगला स्तर', 'આગલું સ્તર')}</span>
                 </div>
               </div>
             </div>
@@ -725,31 +825,38 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                 />
                 <div>
                   <h4 className="font-serif text-sm font-bold text-[#570013]">
-                    आचार्य मार्गदर्शन (Guru Upadesha)
+                    {loc('Guru Guidance (Upadesha)', 'आचार्य मार्गदर्शन', 'आचार्य मार्गदर्शन', 'આચાર્ય માર્ગદર્શન')}
                   </h4>
-                  <p className="text-xs text-[#765B00] font-medium">वे. मू. डॉ. श्रीपाद भट घनापाठी</p>
+                  <p className="text-xs text-[#765B00] font-medium">
+                    {loc('Dr. Shripad Bhat (Ghanapathi)', 'वे. मू. डॉ. श्रीपाद भट (घनापाठी)', 'वे. मू. डॉ. श्रीपाद भट (घनापाठी)', 'વે. મૂ. ડૉ. શ્રીપાદ ભટ્ટ (ઘનાપાઠી)')}
+                  </p>
                 </div>
               </div>
 
               <div className="bg-white p-3 rounded-lg text-[#584141] text-xs space-y-1.5 border border-[#E0BFBF]/30">
                 <div className="flex items-center gap-1 text-[#570013] font-bold">
                   <span className="material-symbols-outlined text-[16px] text-[#765B00]">warning</span>
-                  <span>उच्चारण सावधता (Vocal Precision Note):</span>
+                  <span>{loc('Vocal Precision Note:', 'उच्चारण सावधता:', 'उच्चारण सावधानी:', 'ઉચ્ચારણ સાવધાની:')}</span>
                 </div>
                 <p className="leading-relaxed">
-                  “अग्निमीळे मधील 'ळे' चा उच्चार वैदिक 'ळ' कारानुसार जीभ टाळ्याला अलगद टेकवून करावा. 'पु॒रोहि॑तं' म्हणताना 'पु' वरील अनुदात्त स्वर खाली उतरताना कंठावर अनावश्यक दाब येऊ देऊ नये.”
+                  {loc(
+                    "When pronouncing 'अग्निमीळे', the Vedic 'ळ' sound should touch the palate gently. In 'पु॒रोहि॑तं', the Anudatta svara on 'पु' should descend naturally without strain on the throat.",
+                    "“अग्निमीळे मधील 'ळे' चा उच्चार वैदिक 'ळ' कारानुसार जीभ टाळ्याला अलगद टेकवून करावा. 'पु॒रोहि॑तं' म्हणताना 'पु' वरील अनुदात्त स्वर खाली उतरताना कंठावर अनावश्यक दाब येऊ देऊ नये.”",
+                    "“अग्निमीळे में 'ळे' का उच्चारण वैदिक 'ळ' कारानुसार जिह्वा को तालु से स्पर्श कराकर करें। 'पु॒रोहि॑तं' में 'पु' पर अनुदात्त स्वर का उच्चारण कंठ पर बिना दबाव के सहज रूप से करें।”",
+                    "“અગ્નિમીળે માં 'ળે' નો ઉચ્ચાર વૈદિક 'ળ' કારાનુસાર જીભને તાળવે સ્પર્શ કરાવીને કરવો. 'પુ॒રોહિ॑તં' માં 'પુ' પર અનુદાત્ત સ્વરનો ઉચ્ચાર કંઠ પર દબાણ વગર સહજ કરવો.”"
+                  )}
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() =>
-                  showToast('आपली शंका नोंदवली गेली आहे. आचार्य पुढील सत्रात उत्तर देतील.', 'success')
+                  showToast(loc('Your doubt has been submitted. Acharya will address it in the next session.', 'आपली शंका नोंदवली गेली आहे. आचार्य पुढील सत्रात उत्तर देतील.', 'आपकी शंका दर्ज हो गई है। आचार्य आगामी सत्र में समाधान करेंगे।', 'આપની શંકા નોંધાઈ ગઈ છે. આચાર્ય આગામી સત્રમાં સમાધાન કરશે.'), 'success')
                 }
                 className="w-full py-2.5 px-3 rounded-lg bg-[#570013] text-white hover:bg-[#800020] text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px]">record_voice_over</span>
-                <span>Ask Acharya / शंका निरसन</span>
+                <span>{loc('Ask Acharya / Clarification', 'आचार्यांना विचारा / शंका निरसन', 'आचार्य से पूछें / शंका समाधान', 'આચાર્યને પૂછો / શંકા સમાધાન')}</span>
               </button>
             </div>
 
@@ -757,15 +864,20 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
             <div className="bg-white rounded-xl shadow-xs border border-[#E0BFBF]/40 p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-[#765B00] font-bold uppercase tracking-wider">
-                  दैनिक वेद साधना (Daily Sadhana)
+                  {loc('Daily Vedic Sadhana', 'दैनिक वेद साधना', 'दैनिक वेद साधना', 'દૈનિક વેદ સાધના')}
                 </span>
                 <div className="inline-flex items-center gap-1 bg-[#FFD979] px-2 py-0.5 rounded text-[#795D00] text-xs font-bold">
                   <span className="material-symbols-outlined text-[14px]">local_fire_department</span>
-                  <span>१४ दिवस अखंड</span>
+                  <span>{loc('14-Day Streak', '१४ दिवस अखंड', '14 दिन निरंतर', '૧૪ દિવસ અવિરત')}</span>
                 </div>
               </div>
               <p className="text-xs text-[#584141] leading-relaxed">
-                Submit your 1-minute vocal recitation for automated Svara validation and personal Acharya feedback.
+                {loc(
+                  'Submit your 1-minute vocal recitation for automated Svara validation and personal Acharya feedback.',
+                  'स्वर शुद्धतेसाठी आपले १ मिनिटांचे पठण रेकॉर्ड करा, आचार्य वैयक्तिक मार्गदर्शन करतील.',
+                  'स्वर शुद्धता के लिए अपना 1 मिनट का पाठ रिकॉर्ड करें, आचार्य व्यक्तिगत मार्गदर्शन करेंगे।',
+                  'સ્વર શુદ્ધતા માટે આપનું ૧ મિનિટનું પઠન રેકોર્ડ કરો, આચાર્ય વ્યક્તિગત માર્ગદર્શન આપશે.'
+                )}
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <button
@@ -774,13 +886,13 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                   className="flex-1 py-2 px-3 rounded-lg bg-[#FFF0ED] hover:bg-[#FCEAE6] text-[#570013] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 border border-[#E0BFBF]/40 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">mic</span>
-                  <span>Record Uccharan</span>
+                  <span>{loc('Record Chanting', 'उच्चार रेकॉर्ड करा', 'उच्चारण रिकॉर्ड करें', 'ઉચ્ચારણ રેકોર્ડ કરો')}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onNavigate('dashboard/learning')}
                   className="p-2 rounded-lg bg-[#FFF0ED] hover:bg-[#FCEAE6] text-[#584141] transition-colors border border-[#E0BFBF]/40 cursor-pointer"
-                  title="Listening History"
+                  title={loc('Learning History', 'स्वाध्याय इतिहास', 'अध्ययन इतिहास', 'અધ્યયન ઇતિહાસ')}
                 >
                   <span className="material-symbols-outlined text-[18px]">history</span>
                 </button>
@@ -793,9 +905,16 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                 <span className="material-symbols-outlined text-[#765B00] text-[20px]">all_inclusive</span>
               </div>
               <div>
-                <p className="text-xs text-[#765B00] font-bold">परंपरा संवर्धन ट्रस्ट</p>
+                <p className="text-xs text-[#765B00] font-bold">
+                  {loc('Tradition Preservation Trust', 'परंपरा संवर्धन विश्वस्त संस्था', 'परंपरा संवर्धन न्यास', 'પરંપરા સંવર્ધન ટ્રસ્ટ')}
+                </p>
                 <p className="text-[11px] text-[#584141] leading-snug">
-                  All texts checked against Pune Vaidika Samshodhana Mandala critical editions (१९३३).
+                  {loc(
+                    'All texts checked against Pune Vaidika Samshodhana Mandala critical editions (1933).',
+                    'सर्व संहिता पाठ पुणे वैदिक संशोधन मंडळ अधिकृत ग्रंथांशी (१९३३) ताडून पाहिलेले आहेत.',
+                    'सभी संहिता पाठ पुणे वैदिक संशोधन मंडल के अधिकृत संस्करण (1933) से प्रमाणित हैं।',
+                    'બધા સંહિતા પાઠ પુણે વૈદિક સંશોધન મંડળના અધિકૃત ગ્રંથો (૧૯૩૩) સાથે પ્રમાણિત કરેલા છે.'
+                  )}
                 </p>
               </div>
             </div>
@@ -816,7 +935,12 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                   <span className="material-symbols-outlined text-lg">mic</span>
                 </span>
                 <h3 className="font-serif text-base font-bold text-[#570013]">
-                  सस्वर मंत्रोच्चार सादरीकरण (Audio Test)
+                  {loc(
+                    'Vedic Recitation Audio Test',
+                    'सस्वर मंत्रोच्चार ध्वनी चाचणी',
+                    'सस्वर मंत्रोच्चार ऑडियो परीक्षण',
+                    'સસ્વર મંત્રોચ્ચાર ઑડિયો પરીક્ષણ'
+                  )}
                 </h3>
               </div>
               <button
@@ -832,7 +956,12 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                 <span className="material-symbols-outlined text-3xl">mic</span>
               </div>
               <div className="text-xs text-[#584141]">
-                ऋचा १ — सस्वर उच्चारण ध्वनीमुद्रण सुरू करण्यासाठी खालील बटण दाबा
+                {loc(
+                  'Hymn 1 — Press the button below to start Vedic pronunciation recording.',
+                  'ऋचा १ — सस्वर उच्चारण ध्वनीमुद्रण सुरू करण्यासाठी खालील बटण दाबा.',
+                  'ऋचा 1 — सस्वर उच्चारण रिकॉर्डिंग प्रारंभ करने के लिए नीचे दिया गया बटन दबाएँ।',
+                  'ઋચા ૧ — સસ્વર ઉચ્ચારણ રેકોર્ડિંગ શરૂ કરવા નીચેનું બટન દબાવો.'
+                )}
               </div>
             </div>
 
@@ -841,11 +970,19 @@ export const AgniSuktaPlayerView: React.FC<AgniSuktaPlayerViewProps> = ({ onNavi
                 type="button"
                 onClick={() => {
                   setIsRecordingModalOpen(false);
-                  showToast('आपले उच्चार रेकॉर्डिंग आचार्यांकडे मूल्यांकनासाठी पाठवले आहे!', 'success');
+                  showToast(
+                    loc(
+                      'Your pronunciation recording has been sent to the Acharya for evaluation!',
+                      'आपले उच्चार रेकॉर्डिंग आचार्यांकडे मूल्यांकनासाठी पाठवले आहे!',
+                      'आपकी उच्चारण रिकॉर्डिंग आचार्य मूल्यांकन हेतु भेज दी गई है!',
+                      'તમારું ઉચ્ચારણ રેકોર્ડિંગ આચાર્ય મૂલ્યાંકન માટે મોકલી દેવાયું છે!'
+                    ),
+                    'success'
+                  );
                 }}
                 className="w-full py-2.5 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors cursor-pointer"
               >
-                रेकॉर्ड सुरू करा व सादर करा
+                {loc('Start Recording & Submit', 'रेकॉर्ड सुरू करा व सादर करा', 'रिकॉर्डिंग प्रारंभ कर जमा करें', 'રેકોર્ડ શરૂ કરો અને રજૂ કરો')}
               </button>
             </div>
           </div>

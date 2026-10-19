@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LanguageProvider } from './context/LanguageContext.tsx';
+import { LanguageProvider, useLanguage } from './context/LanguageContext.tsx';
 import { DevoteeProvider, useDevotee } from './context/DevoteeContext.tsx';
 import { PublicHeader } from './components/common/PublicHeader.tsx';
 import { PublicFooter } from './components/common/PublicFooter.tsx';
@@ -32,6 +32,7 @@ import { SettingsView } from './components/dashboard/SettingsView.tsx';
 
 const AppContent: React.FC = () => {
   const { isLoginModalOpen, setIsLoginModalOpen, isLoggedIn } = useDevotee();
+  const { syncTranslate } = useLanguage();
 
   // Navigation route state
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
@@ -40,6 +41,11 @@ const AppContent: React.FC = () => {
   });
 
   const [routeParam, setRouteParam] = useState<string | undefined>(undefined);
+
+  // Sync Google Translate when route changes
+  useEffect(() => {
+    syncTranslate();
+  }, [currentRoute, routeParam, syncTranslate]);
 
   // Sync hash changes
   useEffect(() => {

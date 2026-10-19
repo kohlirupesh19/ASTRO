@@ -16,6 +16,39 @@
   </head>
   <body class="bg-[#FFF8F6] text-[#221918] antialiased selection:bg-[#FFDADA] selection:text-[#40000B]">
     <div id="root"></div>
+    <div id="google_translate_element" style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; width: 0; height: 0; overflow: hidden;"></div>
+    <script type="text/javascript">
+      // Polyfill to prevent React DOM reconciliation errors when Google Translate wraps/replaces text nodes
+      if (typeof Node === 'function' && Node.prototype) {
+        const originalRemoveChild = Node.prototype.removeChild;
+        Node.prototype.removeChild = function(child) {
+          if (child && child.parentNode !== this) {
+            return child;
+          }
+          return originalRemoveChild.apply(this, arguments);
+        };
+
+        const originalInsertBefore = Node.prototype.insertBefore;
+        Node.prototype.insertBefore = function(newNode, referenceNode) {
+          if (referenceNode && referenceNode.parentNode !== this) {
+            return newNode;
+          }
+          return originalInsertBefore.apply(this, arguments);
+        };
+      }
+
+      function googleTranslateElementInit() {
+        if (window.google && window.google.translate) {
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,mr,hi,gu',
+            autoDisplay: false,
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, 'google_translate_element');
+        }
+      }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

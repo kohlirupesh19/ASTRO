@@ -31,3 +31,32 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #875253;
 }
+
+/* Google Translate Integration - Seamless Styling */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-gadget-icon,
+.goog-tooltip,
+.goog-tooltip:hover,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+font {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+

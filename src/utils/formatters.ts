@@ -20,6 +20,19 @@ export function toGujaratiNumerals(input: number | string): string {
 }
 
 /**
+ * Formats digits and numbers according to selected language
+ */
+export function formatLocalizedNumber(input: number | string, lang: Language = 'en'): string {
+  if (lang === 'mr' || lang === 'hi') {
+    return toDevanagariNumerals(input);
+  }
+  if (lang === 'gu') {
+    return toGujaratiNumerals(input);
+  }
+  return String(input);
+}
+
+/**
  * Formats a currency amount according to Indian numbering format
  */
 export function formatIndianCurrency(amount: number): string {
@@ -57,4 +70,25 @@ export function calculateProgressPercentage(current: number, target: number): nu
   if (target <= 0) return 0;
   const pct = (current / target) * 100;
   return Math.min(100, Math.max(0, parseFloat(pct.toFixed(1))));
+}
+
+/**
+ * Formats a Date or ISO date string according to the selected language
+ */
+export function formatLocalizedDate(dateInput: string | Date, lang: Language = 'en'): string {
+  try {
+    const d = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    if (isNaN(d.getTime())) return String(dateInput);
+    const locale = lang === 'mr' ? 'mr-IN' : lang === 'hi' ? 'hi-IN' : lang === 'gu' ? 'gu-IN' : 'en-IN';
+    const formatted = d.toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' });
+    if (lang === 'mr' || lang === 'hi') {
+      return toDevanagariNumerals(formatted);
+    }
+    if (lang === 'gu') {
+      return toGujaratiNumerals(formatted);
+    }
+    return formatted;
+  } catch {
+    return String(dateInput);
+  }
 }

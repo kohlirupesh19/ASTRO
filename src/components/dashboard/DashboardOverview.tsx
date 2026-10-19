@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDevotee } from '../../context/DevoteeContext.tsx';
 import { useLanguage } from '../../context/LanguageContext.tsx';
+import { formatLocalizedCurrency, formatLocalizedNumber } from '../../utils/formatters.ts';
 
 interface DashboardOverviewProps {
   onNavigateModule: (module: string) => void;
@@ -12,7 +13,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onNavigatePublic,
 }) => {
   const { profile, receipts, showToast } = useDevotee();
-  const { language, t } = useLanguage();
+  const { language, t, loc } = useLanguage();
 
   // Localized greetings based on active language
   const greetings: Record<string, string> = {
@@ -30,11 +31,32 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   };
 
   const streakTexts: Record<string, string> = {
-    mr: '१४ दिवस अखंड साधना (14-Day Streak)',
-    hi: '14 दिन निरंतर स्वाध्याय (14-Day Streak)',
-    gu: '૧૪ દિવસ અવિરત સાધના (14-Day Streak)',
+    mr: '१४ दिवस अखंड साधना',
+    hi: '14 दिन निरंतर स्वाध्याय',
+    gu: '૧૪ દિવસ અવિરત સાધના',
     en: '14-Day Continuous Vedic Sadhana',
   };
+
+  const devoteeName = loc(
+    'Shri Rajesh Shantaram Kulkarni',
+    'श्री राजेश शांताराम कुळकर्णी',
+    'श्री राजेश शांताराम कुलकर्णी',
+    'શ્રી રાજેશ શાંતારામ કુલકર્ણી'
+  );
+
+  const devoteeGotra = loc(
+    'Bharadwaja (Kashyapa Pravara)',
+    'भारद्वाज (काश्यप प्रवर)',
+    'भारद्वाज (कश्यप प्रवर)',
+    'ભારદ્વાજ (કાશ્યપ પ્રવર)'
+  );
+
+  const devoteeNakshatra = loc(
+    'Rohini (Pada 2)',
+    'रोहिणी (द्वितीय चरण)',
+    'रोहिणी (द्वितीय चरण)',
+    'રોહિણી (દ્વિતીય ચરણ)'
+  );
 
   return (
     <div className="flex flex-col w-full space-y-6">
@@ -50,12 +72,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <span>{t('dash.verifiedDevotee')} • {profile.code}</span>
               </span>
               <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-[#FFF0ED] text-[#584141] text-xs font-medium">
-                {profile.gotra} • {profile.nakshatra}
+                {devoteeGotra} • {devoteeNakshatra}
               </span>
             </div>
 
             <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#570013] font-bold tracking-tight">
-              {greetings[language] || greetings.mr}, {profile.name}
+              {greetings[language] || greetings.mr}, {devoteeName}
             </h1>
 
             <p className="text-xs sm:text-sm text-[#584141]">
@@ -76,11 +98,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="bg-[#FFF0ED] p-4 rounded-xl flex items-center justify-between gap-4 lg:min-w-[320px] shrink-0 border border-[#E0BFBF]/30">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-[#570013] text-white flex items-center justify-center font-serif text-base font-bold shrink-0 shadow-xs">
-                पं
+                {loc('VD', 'पं', 'पं', 'પં')}
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-[#570013] truncate leading-tight">
-                  पं. विनायक दीक्षित
+                  {loc('Pt. Vinayak Dixit', 'पं. विनायक दीक्षित', 'पं. विनायक दीक्षित', 'પં. વિનાયક દીક્ષિત')}
                 </span>
                 <span className="text-[11px] text-[#584141]">{t('dash.liaisonTitle')}</span>
                 <span className="text-xs text-[#765B00] font-bold mt-0.5 font-mono">+91 98220 54321</span>
@@ -121,15 +143,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </span>
             <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#FFDADA] text-[#570013] text-[10px] font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-[#BA1A1A] animate-pulse"></span>
-              {language === 'en' ? 'LIVE NOW' : 'थेट चालू'}
+              {loc('LIVE NOW', 'थेट चालू', 'प्रत्यक्ष चालू', 'જીવંત ચાલુ')}
             </span>
           </div>
           <div className="mt-3">
             <span className="font-serif text-2xl font-bold text-[#570013]">
-              {language === 'en' ? '1 Active' : '०१ चालू'}
+              {loc('1 Active', '०१ चालू', '1 सक्रिय', '૧ સક્રિય')}
             </span>
             <p className="text-xs text-[#584141] mt-1 truncate">
-              {language === 'en' ? 'Maha Mrityunjaya Anushthan (Day 3/7)' : 'महामृत्युंजय अनुष्ठान (दिवस ३ / ७)'}
+              {loc(
+                'Maha Mrityunjaya Anushthan (Day 3/7)',
+                'महामृत्युंजय अनुष्ठान (दिवस ३ / ७)',
+                'महामृत्युंजय अनुष्ठान (दिन 3/7)',
+                'મહામૃત્યુંજય અનુષ્ઠાન (દિવસ ૩/૭)'
+              )}
             </p>
           </div>
         </div>
@@ -149,10 +176,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
           <div className="mt-3">
             <span className="font-serif text-2xl font-bold text-[#765B00]">
-              {language === 'en' ? '2 Courses' : '०२ वर्ग'}
+              {loc('2 Courses', '०२ वर्ग', '2 पाठ्यक्रम', '૨ અભ્યાસક્રમ')}
             </span>
             <p className="text-xs text-[#584141] mt-1 truncate">
-              {language === 'en' ? 'Rigveda Mandala 1 & Sanskrit' : 'ऋग्वेद प्रथम मण्डल & संस्कृत'}
+              {loc(
+                'Rigveda Mandala 1 & Sanskrit',
+                'ऋग्वेद प्रथम मण्डल & संस्कृत',
+                'ऋग्वेद प्रथम मण्डल एवं संस्कृत',
+                'ઋગ્વેદ પ્રથમ મંડળ અને સંસ્કૃત'
+              )}
             </p>
           </div>
         </div>
@@ -172,10 +204,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
           <div className="mt-3">
             <span className="font-serif text-2xl font-bold text-[#570013]">
-              {language === 'en' ? 'Tomorrow 11:30' : 'उद्या ११:३०'}
+              {loc('Tomorrow 11:30', 'उद्या ११:३०', 'कल 11:30', 'આવતીકાલે ૧૧:૩૦')}
             </span>
             <p className="text-xs text-[#584141] mt-1 truncate">
-              {language === 'en' ? 'Pt. Vishnupant Shastri' : 'दैवज्ञ पं. विष्णुपंत शास्त्री'}
+              {loc(
+                'Pt. Vishnupant Shastri',
+                'दैवज्ञ पं. विष्णुपंत शास्त्री',
+                'ज्योतिषाचार्य पं. विष्णुपंत शास्त्री',
+                'જ્યોતિષાચાર્ય પં. વિષ્ણુપંત શાસ્ત્રી'
+              )}
             </p>
           </div>
         </div>
@@ -194,9 +231,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </span>
           </div>
           <div className="mt-3">
-            <span className="font-serif text-2xl font-bold text-[#570013]">₹३६,०००</span>
+            <span className="font-serif text-2xl font-bold text-[#570013]">{formatLocalizedCurrency(36000, language)}</span>
             <p className="text-xs text-[#584141] mt-1 truncate">
-              {language === 'en' ? 'Form 10BE Ready to Download' : 'Form 10BE प्रमाणपत्र सज्ज'}
+              {loc(
+                'Form 10BE Ready to Download',
+                'Form 10BE प्रमाणपत्र सज्ज',
+                'फॉर्म 10BE प्रमाणपत्र तैयार',
+                'ફોર્મ 10BE પ્રમાણપત્ર તૈયાર'
+              )}
             </p>
           </div>
         </div>
@@ -216,7 +258,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#570013] text-xs font-bold hover:bg-[#FCEAE6] transition-all shadow-xs border border-[#E0BFBF]/40 shrink-0 cursor-pointer"
         >
           <span className="material-symbols-outlined text-base text-[#765B00]">auto_awesome</span>
-          <span>{language === 'en' ? 'Book Astrology Session' : 'ज्योतिष भेट आरक्षित करा'}</span>
+          <span>
+            {loc(
+              'Book Astrology Session',
+              'ज्योतिष भेट आरक्षित करा',
+              'ज्योतिष सत्र आरक्षित करें',
+              'જ્યોતિષ સત્ર બુક કરો'
+            )}
+          </span>
         </button>
         <button
           onClick={() => onNavigateModule('learning')}
@@ -244,12 +293,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#BA1A1A] animate-ping"></span>
                 <span className="font-serif text-lg font-bold text-[#570013]">
-                  {language === 'en' ? 'Maha Mrityunjaya Anushthan & Rudra Swahakar' : 'महामृत्युंजय महा अनुष्ठान व रुद्र स्वाहाकार'}
+                  {loc(
+                    'Maha Mrityunjaya Anushthan & Rudra Swahakar',
+                    'महामृत्युंजय महा अनुष्ठान व रुद्र स्वाहाकार',
+                    'महामृत्युंजय महा अनुष्ठान एवं रुद्र स्वाहाकार',
+                    'મહામૃત્યુંજય મહા અનુષ્ઠાન અને રુદ્ર સ્વાહાકાર'
+                  )}
                 </span>
               </div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#570013] text-white text-xs font-bold self-start sm:self-auto shadow-xs">
                 <span className="material-symbols-outlined text-sm">videocam</span>
-                <span>{language === 'en' ? 'LIVE STREAM ACTIVE' : 'थेट प्रक्षेपण चालू (LIVE)'}</span>
+                <span>{loc('LIVE STREAM ACTIVE', 'थेट प्रक्षेपण सक्रिय', 'प्रत्यक्ष प्रसारण सक्रिय', 'જીવંત પ્રસારણ સક્રિય')}</span>
               </span>
             </div>
 
@@ -258,7 +312,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-xs group bg-[#FCEAE6]">
                   <img
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyMTt1HXsPDF9QTetxCiAAeo0KwEVeFCU_lERwAA4_fIu8pa0gXMyUpp5JyiATMjf9VZyTZ9pbOkLzNkqXSrENO6NlrNyL8zJZLpZddNBq6nyag9zNHcYxkZQXg8Lq0MdQBgt5Z7wimxWcyiCBOrJTmRghe6NNq4XwPZU9GM6L5LGf7fjzg1swFyKWF2-gLW-IanWnuJHBf5q7j244xWmYm7hkTZftxfvNbXajWVh3abK-x3L8-nsClg"
-                    alt="Yajna Live Stream"
+                    alt={loc('Yajna Live Stream', 'यज्ञ थेट प्रक्षेपण', 'यज्ञ प्रत्यक्ष प्रसारण', 'યજ્ઞ જીવંત પ્રસારણ')}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-between p-3">
@@ -271,7 +325,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       className="w-full py-2 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors flex items-center justify-center gap-1 shadow-md cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-base">play_arrow</span>
-                      <span>{language === 'en' ? 'Join Live Yajna Broadcast' : 'थेट प्रक्षेपणात सहभागी व्हा'}</span>
+                      <span>{loc('Join Live Yajna Broadcast', 'थेट प्रक्षेपणात सहभागी व्हा', 'प्रत्यक्ष प्रसारण में जुड़ें', 'જીવંત પ્રસારણમાં જોડાઓ')}</span>
                     </button>
                   </div>
                 </div>
@@ -280,7 +334,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <span className="material-symbols-outlined text-[#765B00] text-lg mt-0.5">local_shipping</span>
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-bold text-[#221918] truncate leading-tight">
-                      {language === 'en' ? 'Sacred Raksha Sutra & Bhasma Prasad Dispatched' : 'रक्षा सूत्र व भस्म प्रसाद रवाना'}
+                      {loc(
+                        'Sacred Raksha Sutra & Bhasma Prasad Dispatched',
+                        'रक्षा सूत्र व भस्म प्रसाद रवाना',
+                        'रक्षा सूत्र एवं भस्म प्रसाद प्रेषित',
+                        'રક્ષા સૂત્ર અને ભસ્મ પ્રસાદ રવાના'
+                      )}
                     </span>
                     <span className="text-[11px] text-[#584141] font-mono">
                       Speed Post #IP784920412IN • In Transit
@@ -293,28 +352,33 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="space-y-3">
                   <div>
                     <span className="text-[11px] text-[#584141] uppercase tracking-wider block font-semibold">
-                      {language === 'en' ? 'Sankalpa Intent' : 'यजमान संकल्प हेतू'}
+                      {loc('Sankalpa Intent', 'यजमान संकल्प हेतू', 'संकल्प हेतु', 'સંકલ્પ હેતુ')}
                     </span>
                     <span className="text-xs font-bold text-[#221918]">
-                      {language === 'en' ? 'Family Health, Longevity & Ayushya Vriddhi' : 'सकुटुंब आरोग्य, दीर्घायुष्य व क्लेश निवृत्ती (Health & Ayushya Vriddhi)'}
+                      {loc(
+                        'Family Health, Longevity & Ayushya Vriddhi',
+                        'सकुटुंब आरोग्य, दीर्घायुष्य व क्लेश निवृत्ती (Health & Ayushya Vriddhi)',
+                        'सकुटुंब स्वास्थ्य, दीर्घायु एवं क्लेश निवारण',
+                        'સકુટુંબ સ્વાસ્થ્ય, દીર્ઘાયુષ્ય અને સુખ શાંતિ'
+                      )}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 py-1">
                     <div className="p-2.5 rounded-lg bg-[#FFF0ED]">
                       <span className="text-[10px] text-[#584141] block">
-                        {language === 'en' ? 'Chief Hotri Priest' : 'मुख्य ऋत्विक'}
+                        {loc('Chief Hotri Priest', 'मुख्य ऋत्विक', 'मुख्य ऋत्विक', 'મુખ્ય ઋત્વિક')}
                       </span>
                       <span className="text-xs font-bold text-[#570013] truncate block">
-                        डॉ. श्रीपाद भट (घनापाठी)
+                        {loc('Dr. Shripad Bhat (Ghanapathi)', 'डॉ. श्रीपाद भट (घनापाठी)', 'डॉ. श्रीपाद भट (घनापाठी)', 'ડૉ. શ્રીપાદ ભટ (ઘનપાઠી)')}
                       </span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-[#FFF0ED]">
                       <span className="text-[10px] text-[#584141] block">
-                        {language === 'en' ? 'Progress' : 'कालावधी'}
+                        {loc('Progress', 'कालावधी', 'प्रगति', 'પ્રગતિ')}
                       </span>
                       <span className="text-xs font-bold text-[#221918] block">
-                        {language === 'en' ? 'Day 3 of 7 (In Progress)' : 'दिवस ३ / ७ (सुरू)'}
+                        {loc('Day 3 of 7 (In Progress)', 'दिवस ३ / ७ (सुरू)', 'दिन 3 / 7 (प्रगति पर)', 'દિવસ ૩ / ૭ (ચાલુ)')}
                       </span>
                     </div>
                   </div>
@@ -323,7 +387,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-[#584141] font-medium">
-                        {language === 'en' ? 'Rudra Japa Count' : 'जपसंख्या प्रगती (रुद्र जप)'}
+                        {loc('Rudra Japa Count', 'जपसंख्या प्रगती (रुद्र जप)', 'रुद्र जप संख्या', 'રુદ્ર જપ સંખ્યા')}
                       </span>
                       <span className="font-bold text-[#570013] font-mono">19,000 / 125,000 (15.2%)</span>
                     </div>
@@ -338,14 +402,24 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onClick={() => onNavigateModule('rituals')}
                     className="text-xs font-bold text-[#570013] hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>{language === 'en' ? 'View Full Sankalpa Details' : 'संकल्प तपशील व गोत्र माहिती'}</span>
+                    <span>{loc('View Full Sankalpa Details', 'संकल्प तपशील व गोत्र माहिती', 'पूर्ण संकल्प विवरण देखें', 'સંપૂર્ણ સંકલ્પ વિગતો જુઓ')}</span>
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </button>
                   <button
-                    onClick={() => showToast(language === 'en' ? 'Connecting to Ashram Liaison...' : 'पुरोहितांशी संपर्क जोडला जात आहे...', 'info')}
+                    onClick={() =>
+                      showToast(
+                        loc(
+                          'Connecting to Ashram Liaison...',
+                          'पुरोहितांशी संपर्क जोडला जात आहे...',
+                          'आश्रम पुरोहितों से संपर्क किया जा रहा है...',
+                          'આશ્રમ પુરોહિતો સાથે સંપર્ક થઈ રહ્યો છે...'
+                        ),
+                        'info'
+                      )
+                    }
                     className="px-3 py-1.5 rounded-lg bg-[#FFF0ED] text-[#221918] text-xs font-semibold hover:bg-[#FCEAE6] transition-colors cursor-pointer"
                   >
-                    {language === 'en' ? 'Contact Pandits' : 'पुरोहितांशी संपर्क'}
+                    {loc('Contact Pandits', 'पुरोहितांशी संपर्क', 'पुरोहितों से संपर्क करें', 'પુરોહિતો સાથે સંપર્ક')}
                   </button>
                 </div>
               </div>
@@ -358,7 +432,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#765B00] text-xl">auto_stories</span>
                 <span className="font-serif text-lg font-bold text-[#570013]">
-                  {language === 'en' ? 'My Gurukul Learning & Veda Sadhana' : 'माझा गुरुकुल स्वाध्याय व वेद साधना'}
+                  {loc(
+                    'My Gurukul Learning & Veda Sadhana',
+                    'माझा गुरुकुल स्वाध्याय व वेद साधना',
+                    'मेरा गुरुकुल स्वाध्याय व वेद साधना',
+                    'મારો ગુરુકુલ સ્વાધ્યાય અને વેદ સાધના'
+                  )}
                 </span>
               </div>
               <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#FFDF94] text-[#251A00] text-xs font-bold">
@@ -372,24 +451,38 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="px-2 py-0.5 rounded bg-[#570013] text-white text-[10px] font-bold">
-                      {language === 'en' ? 'Samhita Chanting' : 'संहिता पाठ'}
+                      {loc('Samhita Chanting', 'संहिता पाठ', 'संहिता पाठ', 'સંહિતા પાઠ')}
                     </span>
-                    <span className="text-xs font-bold text-[#765B00]">{language === 'en' ? 'Lesson 4 of 12 (33%)' : 'पाठ ४ / १२ (३३%)'}</span>
+                    <span className="text-xs font-bold text-[#765B00]">
+                      {loc('Lesson 4 of 12 (33%)', 'पाठ ४ / १२ (३३%)', 'पाठ 4 / 12 (33%)', 'પાઠ ૪ / ૧૨ (૩૩%)')}
+                    </span>
                   </div>
                   <h3 className="font-serif text-sm font-bold text-[#570013]">
-                    {language === 'en' ? 'Rigveda Shakala Samhita - Mandala 1' : 'ऋग्वेद शाकल संहिता अध्ययन - प्रथम मण्डल'}
+                    {loc(
+                      'Rigveda Shakala Samhita - Mandala 1',
+                      'ऋग्वेद शाकल संहिता अध्ययन - प्रथम मण्डल',
+                      'ऋग्वेद शाकल संहिता अध्ययन - प्रथम मण्डल',
+                      'ઋગ્વેદ શાકલ સંહિતા અધ્યયન - પ્રથમ મંડલ'
+                    )}
                   </h3>
                   <p className="text-xs text-[#584141] line-clamp-2">
-                    {language === 'en' ? 'Agni Sukta (1.1) • Svarita & Anudatta accentuation rules with audio.' : 'अग्नि सूक्त (१.१) • उदात्त-अनुदात्त-स्वरित सराव, मंत्र १ व २ स्वर शुद्ध उच्चारण.'}
+                    {loc(
+                      'Agni Sukta (1.1) • Svarita & Anudatta accentuation rules with audio.',
+                      'अग्नि सूक्त (१.१) • उदात्त-अनुदात्त-स्वरित सराव, मंत्र १ व २ स्वर शुद्ध उच्चारण.',
+                      'अग्नि सूक्त (1.1) • उदात्त-अनुदात्त-स्वरित अभ्यास, मंत्र 1 व 2 स्वर शुद्ध उच्चारण.',
+                      'અગ્નિ સૂક્ત (૧.૧) • ઉદાત્ત-અનુદાત્ત-સ્વરિત અભ્યાસ, મંત્ર ૧ અને ૨ શુદ્ધ ઉચ્ચારણ.'
+                    )}
                   </p>
                 </div>
                 <div className="pt-2 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#221918]">33% {language === 'en' ? 'Completed' : 'पूर्ण'}</span>
+                  <span className="text-xs font-bold text-[#221918]">
+                    33% {loc('Completed', 'पूर्ण', 'पूर्ण', 'પૂર્ણ')}
+                  </span>
                   <button
                     onClick={() => onNavigateModule('learning')}
                     className="px-3 py-1.5 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors cursor-pointer"
                   >
-                    {language === 'en' ? 'Resume Study' : 'अभ्यास सुरू करा'}
+                    {loc('Resume Study', 'अभ्यास सुरू करा', 'अध्ययन जारी रखें', 'અભ્યાસ શરૂ કરો')}
                   </button>
                 </div>
               </div>
@@ -398,24 +491,38 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="px-2 py-0.5 rounded bg-[#765B00] text-white text-[10px] font-bold">
-                      {language === 'en' ? 'Sanskrit' : 'संभाषण'}
+                      {loc('Sanskrit', 'संभाषण', 'संस्कृत संभाषण', 'સંસ્કૃત સંભાષણ')}
                     </span>
-                    <span className="text-xs font-bold text-[#765B00]">{language === 'en' ? 'Session 7 of 20 (50%)' : 'सत्र ७ / २० (५०%)'}</span>
+                    <span className="text-xs font-bold text-[#765B00]">
+                      {loc('Session 7 of 20 (50%)', 'सत्र ७ / २० (५०%)', 'सत्र 7 / 20 (50%)', 'સત્ર ૭ / ૨૦ (૫૦%)')}
+                    </span>
                   </div>
                   <h3 className="font-serif text-sm font-bold text-[#570013]">
-                    {language === 'en' ? 'Conversational Sanskrit & Paninian Grammar' : 'संस्कृत संभाषण व पाणिनीय व्याकरण'}
+                    {loc(
+                      'Conversational Sanskrit & Paninian Grammar',
+                      'संस्कृत संभाषण व पाणिनीय व्याकरण',
+                      'संस्कृत संभाषण व पाणिनीय व्याकरण',
+                      'સંસ્કૃત સંભાષણ અને પાણિનીય વ્યાકરણ'
+                    )}
                   </h3>
                   <p className="text-xs text-[#584141] line-clamp-2">
-                    {language === 'en' ? 'Next Live Interactive Session: Saturday 08:30 AM IST (Zoom).' : 'नेक्स्ट लाईव्ह वर्ग: शनिवार • सकाळी ०८:३० (Zoom थेट संवाद).'}
+                    {loc(
+                      'Next Live Interactive Session: Saturday 08:30 AM IST (Zoom).',
+                      'नेक्स्ट लाईव्ह वर्ग: शनिवार • सकाळी ०८:३० (Zoom थेट संवाद).',
+                      'अगला लाइव्ह वर्ग: शनिवार • सुबह 08:30 (Zoom सीधा संवाद).',
+                      'આગામી લાઈવ ક્લાસ: શનિવાર • સવારે ૦૮:૩૦ (Zoom સીધો સંવાદ).'
+                    )}
                   </p>
                 </div>
                 <div className="pt-2 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#221918]">50% {language === 'en' ? 'Completed' : 'पूर्ण'}</span>
+                  <span className="text-xs font-bold text-[#221918]">
+                    50% {loc('Completed', 'पूर्ण', 'पूर्ण', 'પૂર્ણ')}
+                  </span>
                   <button
                     onClick={() => onNavigateModule('learning')}
                     className="px-3 py-1.5 rounded-lg bg-[#765B00] text-white text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
                   >
-                    {language === 'en' ? 'Join Zoom Class' : 'Zoom जॉईन'}
+                    {loc('Join Zoom Class', 'Zoom जॉईन', 'Zoom से जुड़ें', 'Zoom જોડાઓ')}
                   </button>
                 </div>
               </div>
@@ -427,10 +534,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#E0BFBF]/30">
               <div>
                 <h2 className="font-serif text-lg font-bold text-[#570013]">
-                  {language === 'en' ? '80G Tax Exemption Receipts Vault' : '८०-जी धर्मदाय पावती व वित्तीय संच'}
+                  {loc(
+                    '80G Tax Exemption Receipts Vault',
+                    '८०-जी धर्मदाय पावती व वित्तीय संच',
+                    '80G कर छूट रसीदें एवं वित्तीय संच',
+                    '૮૦G કર મુક્તિ રસીદો અને નાણાકીય સંચય'
+                  )}
                 </h2>
                 <p className="text-xs text-[#584141]">
-                  {language === 'en' ? 'CBDT Section 80G Compliant tax exemption certificates' : 'आयकर कलम ८०-जी अन्वये १००% करसवलत पात्र पावत्या'}
+                  {loc(
+                    'CBDT Section 80G Compliant tax exemption certificates',
+                    'आयकर कलम ८०-जी अन्वये १००% करसवलत पात्र पावत्या',
+                    'आयकर धारा 80G के अंतर्गत 100% कर छूट प्राप्त रसीदें',
+                    'આવકવેરા કલમ ૮૦G હેઠળ કર મુક્તિ પ્રમાણપત્રો'
+                  )}
                 </p>
               </div>
               <button
@@ -438,7 +555,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FFF0ED] text-[#570013] text-xs font-bold hover:bg-[#FCEAE6] transition-colors self-start sm:self-auto cursor-pointer"
               >
                 <span className="material-symbols-outlined text-base">folder_zip</span>
-                <span>{language === 'en' ? 'Download Form 10BE Certificate' : 'Form 10BE वार्षिक प्रमाणपत्र'}</span>
+                <span>
+                  {loc(
+                    'Download Form 10BE Certificate',
+                    'Form 10BE वार्षिक प्रमाणपत्र',
+                    'Form 10BE वार्षिक प्रमाण पत्र',
+                    'Form 10BE વાર્ષિક પ્રમાણપત્ર'
+                  )}
+                </span>
               </button>
             </div>
 
@@ -454,10 +578,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
                     <div className="flex flex-col min-w-0">
                       <span className="text-xs font-bold text-[#221918] truncate">
-                        {language === 'en' ? r.purpose : r.purposeMr}
+                        {language === 'en'
+                          ? r.purpose
+                          : language === 'hi'
+                          ? (r.purposeHi || r.purpose)
+                          : language === 'gu'
+                          ? (r.purposeGu || r.purpose)
+                          : (r.purposeMr || r.purpose)}
                       </span>
                       <span className="text-[11px] text-[#584141]">
-                        {language === 'en' ? 'Receipt:' : 'पावती:'} <span className="font-mono font-semibold">{r.receiptNo}</span> • {r.date} • {r.mode}
+                        {loc('Receipt:', 'पावती:', 'रसीद:', 'રસીદ:')}{' '}
+                        <span className="font-mono font-semibold">{r.receiptNo}</span> • {r.date} • {r.mode}
                       </span>
                     </div>
                   </div>
@@ -469,7 +600,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       onClick={() => onNavigateModule('donations')}
                       className="px-3 py-1.5 rounded bg-white text-[#570013] text-xs font-bold hover:bg-[#570013] hover:text-white transition-all shadow-xs cursor-pointer"
                     >
-                      {language === 'en' ? 'Receipt PDF' : 'पावती PDF'}
+                      {loc('Receipt PDF', 'पावती PDF', 'रसीद PDF', 'રસીદ PDF')}
                     </button>
                   </div>
                 </div>
@@ -484,10 +615,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="w-full bg-white rounded-2xl shadow-xs border border-[#E0BFBF]/40 p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-[#E0BFBF]/30">
               <span className="font-serif text-base font-bold text-[#570013]">
-                {language === 'en' ? 'Vedic Astrology Consultation' : 'वैदिक जन्मपत्रिका परामर्श'}
+                {loc('Vedic Astrology Consultation', 'वैदिक जन्मपत्रिका परामर्श', 'वैदिक जन्मपत्रिका परामर्श', 'વૈદિક જન્મકુંડળી પરામર્શ')}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-[#FFD979]/50 text-[#795D00] text-xs font-bold">
-                {language === 'en' ? 'Confirmed' : 'आरक्षित (Confirmed)'}
+                {loc('Confirmed', 'आरक्षित', 'आरक्षित', 'કન્ફર્મ')}
               </span>
             </div>
 
@@ -499,13 +630,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-[#570013] truncate leading-tight">
-                  दैवज्ञ पं. पु. विष्णुपंत शास्त्री
+                  {loc('Pt. Pu. Vishnupant Shastri (Jyotishratna)', 'दैवज्ञ पं. पु. विष्णुपंत शास्त्री', 'दैवज्ञ पं. पु. विष्णुपंत शास्त्री', 'દૈવજ્ઞ પં. પૂ. વિષ્ણુપંત શાસ્ત્રી')}
                 </span>
                 <span className="text-[11px] text-[#584141]">
-                  {language === 'en' ? 'Jyotish & Muhurta Scholar' : 'फलज्योतिष व मुहूर्त विशारद'}
+                  {loc('Jyotish & Muhurta Scholar', 'फलज्योतिष व मुहूर्त विशारद', 'फलज्योतिष व मुहूर्त विशारद', 'જ્યોતિષ અને મુહૂર્ત વિશારદ')}
                 </span>
                 <span className="text-[11px] text-[#765B00] font-semibold mt-0.5">
-                  {language === 'en' ? 'Focus: Mahadasha & Remedial Shanti' : 'विषय: महादशा व ग्रहशांती'}
+                  {loc('Focus: Mahadasha & Remedial Shanti', 'विषय: महादशा व ग्रहशांती', 'विषय: महादशा व ग्रहशांति', 'વિષય: મહાદશા અને ગ્રહશાંતિ')}
                 </span>
               </div>
             </div>
@@ -513,19 +644,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="p-3 rounded-xl bg-[#FFF0ED] space-y-1 border border-[#E0BFBF]/30 text-xs">
               <div className="flex items-center gap-2 font-bold text-[#221918]">
                 <span className="material-symbols-outlined text-[#570013] text-base">event</span>
-                <span>{language === 'en' ? 'Tomorrow • 11:30 AM IST' : 'उद्या • ११:३० AM IST'}</span>
+                <span>{loc('Tomorrow • 11:30 AM IST', 'उद्या • ११:३० AM IST', 'कल • 11:30 AM IST', 'આવતીકાલે • ૧૧:૩૦ AM IST')}</span>
               </div>
               <div className="flex items-center gap-2 text-[#584141]">
                 <span className="material-symbols-outlined text-[#765B00] text-base">location_on</span>
-                <span>{language === 'en' ? 'Central Ashram, Pune (In-Person)' : 'वेदमंदिर, पौड रोड, पुणे (Direct Ashram)'}</span>
+                <span>{loc('Central Ashram, Pune (In-Person)', 'वेदमंदिर, पौड रोड, पुणे (प्रत्यक्ष भेट)', 'वेदमंदिर, पौड रोड, पुणे (प्रत्यक्ष परामर्श)', 'વેદમંદિર, પૌડ રોડ, પુણે (પ્રત્યક્ષ મુલાકાત)')}</span>
               </div>
             </div>
 
             {/* Kundali Thumbnail */}
             <div className="p-3 rounded-xl bg-[#FFF8F6] border border-[#E0BFBF]/40 space-y-1.5">
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-[#584141] font-semibold">{language === 'en' ? 'Kundali Chart (D1 Lagna)' : 'कुंडली प्रारूप (D1 लग्न)'}</span>
-                <span className="text-[#570013] font-bold">{language === 'en' ? 'Dasha: Guru-Shani' : 'दशा: गुरू-शनि-बुध'}</span>
+                <span className="text-[#584141] font-semibold">{loc('Kundali Chart (D1 Lagna)', 'कुंडली प्रारूप (D1 लग्न)', 'कुंडली प्रारूप (D1 लग्न)', 'કુંડળી પ્રારૂપ (D1 લગ્ન)')}</span>
+                <span className="text-[#570013] font-bold">{loc('Dasha: Guru-Shani', 'दशा: गुरू-शनि-बुध', 'दशा: गुरु-शनि-बुध', 'દશા: ગુરુ-શનિ-બુધ')}</span>
               </div>
               <div className="w-full aspect-[4/3] bg-white rounded-lg flex items-center justify-center p-2 border border-[#E0BFBF]/30">
                 <svg className="w-full h-full text-[#765B00]" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 100 100">
@@ -548,7 +679,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 className="w-full py-2.5 rounded-lg bg-[#570013] text-white text-xs font-bold hover:bg-[#800020] transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-base">auto_awesome</span>
-                <span>{language === 'en' ? 'Open Full Kundali & Dasha Suite' : 'कुंडली व दशा कक्ष उघडा'}</span>
+                <span>{loc('Open Full Kundali & Dasha Suite', 'कुंडली व दशा कक्ष उघडा', 'कुंडली व दशा कक्ष खोलें', 'કુંડળી અને દશા કક્ષ ખોલો')}</span>
               </button>
             </div>
           </div>
@@ -557,13 +688,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="w-full bg-white rounded-2xl shadow-xs border border-[#E0BFBF]/40 p-5 sm:p-6 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[#E0BFBF]/30">
               <h2 className="font-serif text-base font-bold text-[#570013]">
-                {language === 'en' ? 'Upcoming Ashram Events' : 'आगामी आश्रम उपक्रम'}
+                {loc('Upcoming Ashram Events', 'आगामी आश्रम उपक्रम', 'आगामी आश्रम कार्यक्रम', 'આગામી આશ્રમ કાર્યક્રમો')}
               </h2>
               <button
                 onClick={() => onNavigatePublic('events')}
                 className="text-xs font-bold text-[#765B00] hover:underline cursor-pointer"
               >
-                {language === 'en' ? 'View All' : 'सर्व पहा'}
+                {loc('View All', 'सर्व पहा', 'सभी देखें', 'બધા જુઓ')}
               </button>
             </div>
 
@@ -571,14 +702,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="p-3 rounded-lg bg-[#FFF0ED] flex items-start gap-3 border border-[#E0BFBF]/30">
                 <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-[#570013] text-white shrink-0 font-mono">
                   <span className="text-xs font-bold leading-none">04</span>
-                  <span className="text-[9px] leading-none opacity-80 mt-1 uppercase">Jun</span>
+                  <span className="text-[9px] leading-none opacity-80 mt-1 uppercase">{loc('JUN', 'जून', 'जून', 'જૂન')}</span>
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-xs font-bold text-[#221918] truncate">
-                    {language === 'en' ? 'Nirjala Ekadashi Community Sahasranama' : 'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम'}
+                    {loc(
+                      'Nirjala Ekadashi Community Sahasranama',
+                      'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम',
+                      'निर्जला एकादशी सामूहिक विष्णुसहस्रनाम',
+                      'નિર્જલા એકાદશી સામૂહિક વિષ્ણુસહસ્રનામ'
+                    )}
                   </span>
                   <span className="text-[11px] text-[#584141] mt-0.5">
-                    {language === 'en' ? '5:30 PM • Ashram Yajna Shala' : 'सायंकाळी ५:३० • यज्ञाश्रम'}
+                    {loc('5:30 PM • Ashram Yajna Shala', 'सायंकाळी ५:३० • यज्ञाश्रम', 'शाम 5:30 • यज्ञाश्रम', 'સાંજે ૫:૩૦ • યજ્ઞાશ્રમ')}
                   </span>
                 </div>
               </div>
@@ -586,14 +722,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="p-3 rounded-lg bg-[#FFF0ED] flex items-start gap-3 border border-[#E0BFBF]/30">
                 <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-[#765B00] text-white shrink-0 font-mono">
                   <span className="text-xs font-bold leading-none">21</span>
-                  <span className="text-[9px] leading-none opacity-80 mt-1 uppercase">Jun</span>
+                  <span className="text-[9px] leading-none opacity-80 mt-1 uppercase">{loc('JUN', 'जून', 'जून', 'જૂન')}</span>
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-xs font-bold text-[#221918] truncate">
-                    {language === 'en' ? 'Surya Sankranti Maha Rudrabhishek Yajna' : 'सूर्य संक्रांति महा रुद्राभिषेक होम'}
+                    {loc(
+                      'Surya Sankranti Maha Rudrabhishek Yajna',
+                      'सूर्य संक्रांति महा रुद्राभिषेक होम',
+                      'सूर्य संक्रांति महा रुद्राभिषेक होम',
+                      'સૂર્ય સંક્રાંતિ મહા રુદ્રાભિષેક હોમ'
+                    )}
                   </span>
                   <span className="text-[11px] text-[#584141] mt-0.5">
-                    {language === 'en' ? '07:00 AM • Live Stream Available' : 'सकाळी ०७:०० • थेट प्रक्षेपण'}
+                    {loc('07:00 AM • Live Stream Available', 'सकाळी ०७:०० • थेट प्रक्षेपण', 'सुबह 07:00 • सीधा प्रसारण', 'સવારે ૦૭:૦૦ • લાઈવ પ્રસારણ')}
                   </span>
                 </div>
               </div>
@@ -605,27 +746,30 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#765B00]">handshake</span>
               <span className="text-xs uppercase tracking-wider text-[#765B00] font-bold">
-                {language === 'en' ? 'Sacred Seva Sponsorship' : 'सत्कार्य आवाहन'}
+                {loc('Sacred Seva Sponsorship', 'सत्कार्य आवाहन', 'सत्कार्य आह्वान', 'સત્કાર્ય આહ્વાન')}
               </span>
             </div>
             <h3 className="font-serif text-base font-bold text-[#570013]">
-              {language === 'en' ? 'Veda Student Sponsorship Scheme' : 'वेद विद्यार्थी दत्तक योजना'}
+              {loc('Veda Student Sponsorship Scheme', 'वेद विद्यार्थी दत्तक योजना', 'वेद विद्यार्थी दत्तक योजना', 'વેદ વિદ્યાર્થી દત્તક યોજના')}
             </h3>
             <p className="text-xs text-[#584141] leading-relaxed">
-              {language === 'en'
-                ? 'Support a student scholar in full-time residential Vedic studies, boarding, and meals. 100% Tax Exempt under 80G.'
-                : 'गुरुकुलातील एका बटूच्या वार्षिक अध्ययन, निवास व भोजनाची व्यवस्था करा. आपल्या सेवेला आयकर ८०-जी सवलत लागू.'}
+              {loc(
+                'Support a student scholar in full-time residential Vedic studies, boarding, and meals. 100% Tax Exempt under 80G.',
+                'गुरुकुलातील एका बटूच्या वार्षिक अध्ययन, निवास व भोजनाची व्यवस्था करा. आपल्या सेवेला आयकर ८०-जी सवलत लागू.',
+                'गुरुकुल के एक बटुक के वार्षिक अध्ययन, आवास और भोजन की व्यवस्था करें। आयकर धारा 80G के अंतर्गत 100% कर छूट मान्य।',
+                'ગુરુકુલના એક બટુકના વાર્ષિક અધ્યયન, આવાસ અને ભોજનની વ્યવસ્થા કરો. આવકવેરા કલમ ૮૦G હેઠળ કર મુક્તિ ઉપલબ્ધ.'
+              )}
             </p>
             <div className="pt-2 flex items-center justify-between border-t border-[#E0BFBF]/30">
               <div className="flex flex-col">
-                <span className="text-[10px] text-[#584141]">{language === 'en' ? 'Monthly Seva' : 'मासिक सेवा'}</span>
-                <span className="font-serif text-base font-bold text-[#570013]">₹ २,५०० / {language === 'en' ? 'mo' : 'महिना'}</span>
+                <span className="text-[10px] text-[#584141]">{loc('Monthly Seva', 'मासिक सेवा', 'मासिक सेवा', 'માસિક સેવા')}</span>
+                <span className="font-serif text-base font-bold text-[#570013]">{formatLocalizedCurrency(2500, language)} / {loc('mo', 'महिना', 'माह', 'મહિનો')}</span>
               </div>
               <button
                 onClick={() => onNavigateModule('donations')}
                 className="px-3.5 py-1.5 rounded-lg bg-[#765B00] text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-xs cursor-pointer"
               >
-                {language === 'en' ? 'Sponsor Now' : 'मासिक सेवा वाढवा'}
+                {loc('Sponsor Now', 'मासिक सेवा वाढवा', 'सेवा सहयोग दें', 'સેવા સહયોગ આપો')}
               </button>
             </div>
           </div>

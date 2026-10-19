@@ -17,10 +17,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onNavigatePublic,
   children,
 }) => {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, loc } = useLanguage();
   const { profile, setIsLoggedIn, showToast } = useDevotee();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const devoteeDisplayName = loc(
+    'Shri Rajesh Shantaram Kulkarni',
+    'श्री राजेश शांताराम कुळकर्णी',
+    'श्री राजेश शांताराम कुलकर्णी',
+    'શ્રી રાજેશ શાંતારામ કુલકર્ણી'
+  );
 
   // Close mobile sidebar on Escape key
   useEffect(() => {
@@ -37,7 +44,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       id: 'rituals',
       key: 'nav.rituals',
       icon: 'local_fire_department',
-      badge: language === 'en' ? '1 Active' : '१ चालू',
+      badge: loc('1 Active', '१ चालू', '1 सक्रिय', '૧ સક્રિય'),
       badgeColor: 'bg-[#FFD979] text-[#795D00]',
     },
     { id: 'appointments', key: 'nav.appointments', icon: 'calendar_month' },
@@ -45,7 +52,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       id: 'learning',
       key: 'nav.learning',
       icon: 'menu_book',
-      badge: '14-Day',
+      badge: loc('14-Day', '१४ दिवस', '14-दिन', '૧૪ દિવસ'),
       badgeColor: 'bg-[#FFDCC1] text-[#2E1600]',
     },
     { id: 'astrology', key: 'nav.astrology', icon: 'auto_awesome' },
@@ -62,17 +69,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const languagesList: { code: Language; label: string }[] = [
     { code: 'mr', label: 'मराठी' },
-    { code: 'hi', label: 'हिंदी' },
+    { code: 'hi', label: 'हिन्दी' },
     { code: 'gu', label: 'ગુજરાતી' },
-    { code: 'en', label: 'EN' },
+    { code: 'en', label: 'English' },
   ];
 
   const handleSignOut = () => {
     setIsLoggedIn(false);
     showToast(
-      language === 'en'
-        ? 'You have safely signed out of Devotee Sanctum'
-        : 'आपण यशस्वीरित्या बाहेर पडला आहात (Logged out)',
+      loc(
+        'You have safely signed out of Devotee Sanctum',
+        'आपण यशस्वीरित्या बाहेर पडला आहात',
+        'आप सफलतापूर्वक भक्त कक्ष से बाहर आ गए हैं',
+        'આપ સફળતાપૂર્વક બહાર નીકળી ગયા છો'
+      ),
       'info'
     );
     onNavigatePublic('home');
@@ -122,7 +132,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               <Logo size="sm" />
               <div className="flex flex-col min-w-0">
                 <span className="font-serif text-[14px] font-bold tracking-tight text-[#570013] leading-tight truncate">
-                  {t('org.nameDevanagari')}
+                  {t('org.name')}
                 </span>
                 <span className="text-[11px] text-[#765B00] font-medium truncate">
                   {t('devoteeSanctum')} • Portal
@@ -219,11 +229,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               className="flex items-center gap-2.5 min-w-0 text-left cursor-pointer"
             >
               <div className="w-8 h-8 rounded-full bg-[#FFD979] text-[#795D00] flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
-                {profile.name.charAt(0)}
+                {devoteeDisplayName.charAt(0)}
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-[#221918] truncate leading-tight">
-                  {profile.name}
+                  {devoteeDisplayName}
                 </span>
                 <span className="text-[11px] text-[#765B00] font-mono truncate font-semibold">
                   {profile.code}
@@ -332,7 +342,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               title={t('nav.profile')}
             >
               <div className="w-8 h-8 rounded-full bg-[#FFD979] text-[#795D00] ring-1 ring-[#765B00] flex items-center justify-center font-bold text-xs">
-                {profile.name.charAt(0)}
+                {devoteeDisplayName.charAt(0)}
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#E8C264] ring-2 ring-white"></span>
             </button>
@@ -346,12 +356,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <footer className="w-full bg-[#FFF0ED] py-3 px-4 lg:px-8 border-t border-[#E0BFBF]/30 text-xs text-[#584141]">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
             <span>
-              © 2025 {t('org.nameDevanagari')} • {t('devoteeSanctum')} • Regd. Public Charitable Trust F/49210
+              © 2025 {t('org.name')} • {t('devoteeSanctum')} • Regd. Public Charitable Trust F/49210
             </span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="material-symbols-outlined text-xs leading-none">lock</span>
-                <span>256-bit Encrypted Shastric Vault</span>
+                <span>
+                  {loc(
+                    '256-bit Encrypted Shastric Vault',
+                    '२५६-बिट सुरक्षित शास्त्रीय संच',
+                    '256-बिट सुरक्षित शास्त्रीय संच',
+                    '૨૫૬-બિટ સુરક્ષિત શાસ્ત્રીય ભંડાર'
+                  )}
+                </span>
               </span>
               <span>•</span>
               <span>

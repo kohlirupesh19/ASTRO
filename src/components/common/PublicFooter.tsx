@@ -19,10 +19,10 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               <Logo size="md" />
               <div className="flex flex-col">
                 <span className="font-serif text-lg leading-tight text-[#570013] font-bold">
-                  {t('org.nameDevanagari')}
+                  {t('org.name')}
                 </span>
                 <span className="text-xs text-[#765B00] tracking-wide font-medium">
-                  {t('org.name')}
+                  {t('org.tagline')}
                 </span>
               </div>
             </div>

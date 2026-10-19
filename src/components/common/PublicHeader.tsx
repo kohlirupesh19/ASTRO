@@ -11,7 +11,7 @@ interface PublicHeaderProps {
 }
 
 export const PublicHeader: React.FC<PublicHeaderProps> = ({ currentPath, onNavigate }) => {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, loc } = useLanguage();
   const { isLoggedIn, setIsLoginModalOpen, profile } = useDevotee();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -156,7 +156,7 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({ currentPath, onNavig
             </div>
             <div className="flex flex-col min-w-0">
               <span className="font-serif text-sm sm:text-lg lg:text-xl font-bold text-[#570013] group-hover:text-[#800020] transition-colors tracking-tight leading-tight truncate">
-                {t('org.nameDevanagari')}
+                {t('org.name')}
               </span>
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-[10px] sm:text-xs font-semibold text-[#765B00] tracking-wide truncate">
@@ -200,7 +200,7 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({ currentPath, onNavig
             >
               <span className="material-symbols-outlined text-sm sm:text-base mr-1">calendar_month</span>
               <span className="hidden sm:inline">{t('bookAppointment')}</span>
-              <span className="sm:hidden">{language === 'en' ? 'Book' : 'अपॉइंटमेंट'}</span>
+              <span className="sm:hidden">{loc('Book', 'नोंदणी', 'पंजीकरण', 'બુક')}</span>
             </button>
 
             {/* Mobile Menu Trigger Button (Visible on < lg) */}
@@ -237,10 +237,10 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({ currentPath, onNavig
                     <Logo size="sm" />
                     <div className="flex flex-col">
                       <span className="font-serif text-sm font-bold text-[#570013] leading-tight">
-                        {t('org.nameDevanagari')}
+                        {t('org.name')}
                       </span>
                       <span className="text-[11px] text-[#765B00] font-medium">
-                        {t('org.name')}
+                        {t('org.tagline')}
                       </span>
                     </div>
                   </div>
